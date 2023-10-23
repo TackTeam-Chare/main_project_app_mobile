@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_blog_app_project/models/api_response.dart';
 import 'package:test_blog_app_project/models/user.dart';
@@ -22,6 +23,14 @@ class _LoginState extends State<Login> {
   void _loginUser() async {
     ApiResponse response = await login(txtEmail.text, txtPassword.text);
     if (response.error == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        QuickAlert.show(
+            // แสดง QuickAlert ทันทีเมื่อล็อคอินสำเร็จ
+            context: context,
+            type: QuickAlertType.success,
+            title: 'Login successful',
+            text: 'Welcome users',);
+      });
       _saveAndRedirectToHome(response.data as User);
     } else {
       setState(() {
@@ -29,6 +38,15 @@ class _LoginState extends State<Login> {
       });
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('${response.error}')));
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        QuickAlert.show(
+          // แสดง QuickAlert ทันทีเมื่อล็อคอินสำเร็จ
+          context: context,
+          type: QuickAlertType.error,
+          title: 'Login failed',
+          text: 'Please log in again.',
+        );
+      });
     }
   }
 
@@ -44,14 +62,36 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: Text(
+          'Login',
+          style: TextStyle(fontSize: 30),
+        ),
         centerTitle: true,
       ),
       body: Form(
         key: formkey,
         child: ListView(
-          padding: EdgeInsets.all(32),
+          padding: EdgeInsets.all(50),
           children: [
+            Center(
+              child: ClipOval(
+                child: Container(
+                  width: 135, // กำหนดความกว้างตามที่คุณต้องการ
+                  height: 137, // กำหนดความสูงตามที่คุณต้องการ
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle, // กำหนดรูปร่างเป็นวงกลม
+                    color: Colors.white, // สีพื้นหลัง
+                    border:
+                        Border.all(color: Colors.grey, width: 2.0), // เส้นขอบ
+                  ),
+                  child: Image.asset(
+                    'assets/images/person.png',
+                    fit: BoxFit.cover, // ปรับขนาดรูปให้พอดีกับ Container
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 50),
             TextFormField(
               keyboardType: TextInputType.emailAddress,
               controller: txtEmail,
