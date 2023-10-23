@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:quickalert/quickalert.dart';
 import 'package:test_blog_app_project/constant.dart';
 import 'package:test_blog_app_project/models/api_response.dart';
 import 'package:test_blog_app_project/models/post.dart';
 import 'package:test_blog_app_project/screens/comment_screen.dart';
+import 'package:test_blog_app_project/screens/post_form.dart';
 import 'package:test_blog_app_project/serveices/post_service.dart';
 import 'package:test_blog_app_project/serveices/user_service.dart';
 
 import 'login.dart';
-import 'post_form.dart';
 
 class PostScreen extends StatefulWidget {
   @override
@@ -122,8 +121,12 @@ class _PostScreenState extends State<PostScreen> {
                 itemCount: _postList.length,
                 itemBuilder: (BuildContext context, int index) {
                   Post post = _postList[index];
-                  return Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  return Card(
+                    elevation: 10,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20), // กำหนดมุมโค้ง
+                    ), // ความสูงของ Card
+                    margin: EdgeInsets.symmetric(horizontal: 18, vertical: 12),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -132,30 +135,36 @@ class _PostScreenState extends State<PostScreen> {
                           children: [
                             Row(
                               children: [
-                                Container(
-                                  width: 48,
-                                  height: 48,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    image: post.user!.image != null
-                                        ? DecorationImage(
-                                            image: NetworkImage(
-                                                '${post.user!.image}'),
-                                            fit: BoxFit.cover,
-                                          )
-                                        : null,
-                                    color: Colors.amber,
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                    width: 48,
+                                    height: 48,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: post.user!.image != null
+                                          ? DecorationImage(
+                                              image: NetworkImage(
+                                                  '${post.user!.image}'),
+                                              fit: BoxFit.cover,
+                                            )
+                                          : null,
+                                      color: Colors.amber,
+                                    ),
                                   ),
                                 ),
                                 SizedBox(width: 12),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      'User : ${post.user!.name}',
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 12,
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        'User : ${post.user!.name}',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 12,
+                                        ),
                                       ),
                                     ),
                                     Row(
@@ -168,12 +177,15 @@ class _PostScreenState extends State<PostScreen> {
                                             fontSize: 22,
                                           ),
                                         ),
-                                        Text(
-                                          '${post.title}', // แสดง Title (หัวข้อบท)
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 26,
-                                            color: Colors.black,
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Text(
+                                            '${post.title}', // แสดง Title (หัวข้อบท)
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 26,
+                                              color: Colors.black,
+                                            ),
                                           ),
                                         ),
                                       ],
@@ -236,9 +248,12 @@ class _PostScreenState extends State<PostScreen> {
                           ],
                         ),
                         SizedBox(height: 12),
-                        Text(
-                          '${post.body}',
-                          style: TextStyle(fontSize: 16),
+                        Padding(
+                          padding: const EdgeInsets.all(20),
+                          child: Text(
+                            '${post.body}',
+                            style: TextStyle(fontSize: 16),
+                          ),
                         ),
                         if (post.image != null)
                           Container(
