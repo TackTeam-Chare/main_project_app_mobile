@@ -135,7 +135,7 @@ class PostController extends Controller
     }
 
     // Save image and return file path
-    private function saveImage($image)
+    public function saveImage($image,$path = 'public')
     {
         $imageName = Str::random(20) . '.' . $image->getClientOriginalExtension();
         $path = 'public/images/posts';
