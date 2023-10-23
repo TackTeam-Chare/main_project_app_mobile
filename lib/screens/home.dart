@@ -58,6 +58,7 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Blog App'),
+        centerTitle: true,
         actions: [
           IconButton(
             icon: Icon(Icons.exit_to_app),
