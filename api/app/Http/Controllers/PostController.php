@@ -5,23 +5,27 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Post;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
-    // get all posts
+    // Get all posts
     public function index()
     {
         return response([
-            'posts' => Post::orderBy('created_at', 'desc')->with('user:id,name,image')->withCount('comments', 'likes')
-            ->with('likes', function($like){
-                return $like->where('user_id', auth()->user()->id)
-                    ->select('id', 'user_id', 'post_id')->get();
-            })
-            ->get()
+            'posts' => Post::orderBy('created_at', 'desc')
+                ->with('user:id,name,image')
+                ->withCount('comments', 'likes')
+                ->with('likes', function ($like) {
+                    return $like->where('user_id', auth()->user()->id)
+                        ->select('id', 'user_id', 'post_id')
+                        ->get();
+                })
+                ->get()
         ], 200);
     }
 
-    // get single post
+    // Get single post
     public function show($id)
     {
         return response([
@@ -29,27 +33,30 @@ class PostController extends Controller
         ], 200);
     }
 
-    // create a post
+    // Create a post
     public function store(Request $request)
     {
-        //validate fields
+        // Validate fields
         $attrs = $request->validate([
-            'title' => 'required|string', 
+            'title' => 'required|string',
             'category' => 'required|string',
-            'body' => 'required|string'
+            'body' => 'required|string',
+            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Set your validation rules for images
         ]);
 
-        $image = $this->saveImage($request->image, 'posts');
+        // Handle image upload and save
+        $image = null;
+        if ($request->hasFile('image')) {
+            $image = $this->saveImage($request->file('image'));
+        }
 
         $post = Post::create([
-            'title' => $attrs['title'], // เพิ่ม Title
-            'category' => $attrs['category'], // เพิ่ม Category
+            'title' => $attrs['title'],
+            'category' => $attrs['category'],
             'body' => $attrs['body'],
             'user_id' => auth()->user()->id,
-            'image' => $image
+            'image' => $image,
         ]);
-
-        // for now skip for post image
 
         return response([
             'message' => 'Post created.',
@@ -57,37 +64,43 @@ class PostController extends Controller
         ], 200);
     }
 
-    // update a post
+    // Update a post
     public function update(Request $request, $id)
     {
         $post = Post::find($id);
 
-        if(!$post)
-        {
+        if (!$post) {
             return response([
                 'message' => 'Post not found.'
             ], 403);
         }
 
-        if($post->user_id != auth()->user()->id)
-        {
+        if ($post->user_id != auth()->user()->id) {
             return response([
                 'message' => 'Permission denied.'
             ], 403);
         }
 
-        //validate fields
+        // Validate fields
         $attrs = $request->validate([
-            'body' => 'required|string'
+            'title' => 'required|string',
+            'category' => 'required|string',
+            'body' => 'required|string',
+            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Set your validation rules for images
         ]);
 
+        // Handle image upload and save (if a new image is provided)
+        if ($request->hasFile('image')) {
+            $image = $this->saveImage($request->file('image'));
+            $post->image = $image;
+        }
+
+        // Update the post details
         $post->update([
-            'title' => $attrs['title'], // เพิ่ม Title
-            'category' => $attrs['category'], // เพิ่ม Category
-            'body' =>  $attrs['body']
+            'title' => $attrs['title'],
+            'category' => $attrs['category'],
+            'body' => $attrs['body']
         ]);
-
-        // for now skip for post image
 
         return response([
             'message' => 'Post updated.',
@@ -95,20 +108,18 @@ class PostController extends Controller
         ], 200);
     }
 
-    //delete post
+    // Delete post
     public function destroy($id)
     {
         $post = Post::find($id);
 
-        if(!$post)
-        {
+        if (!$post) {
             return response([
                 'message' => 'Post not found.'
             ], 403);
         }
 
-        if($post->user_id != auth()->user()->id)
-        {
+        if ($post->user_id != auth()->user()->id) {
             return response([
                 'message' => 'Permission denied.'
             ], 403);
@@ -121,5 +132,14 @@ class PostController extends Controller
         return response([
             'message' => 'Post deleted.'
         ], 200);
+    }
+
+    // Save image and return file path
+    private function saveImage($image)
+    {
+        $imageName = Str::random(20) . '.' . $image->getClientOriginalExtension();
+        $path = 'public/images/posts';
+        $image->storeAs($path, $imageName);
+        return asset(Storage::url($path . '/' . $imageName));
     }
 }
