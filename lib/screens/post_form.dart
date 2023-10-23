@@ -8,7 +8,6 @@ import 'package:test_blog_app_project/serveices/post_service.dart';
 import 'package:test_blog_app_project/serveices/user_service.dart';
 import 'login.dart';
 
-
 class PostForm extends StatefulWidget {
   final Post? post;
   final String? title;
@@ -29,7 +28,7 @@ class _PostFormState extends State<PostForm> {
   bool _loading = false;
   File? _imageFile;
   final _picker = ImagePicker();
-   String? _imageBase64; // เพิ่มตัวแปรนี้
+  String? _imageBase64; // เพิ่มตัวแปรนี้
 
   Future getImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -151,6 +150,11 @@ class _PostFormState extends State<PostForm> {
                               val!.isEmpty ? 'Title is required' : null,
                           decoration: InputDecoration(
                               hintText: "Title...",
+                              labelText: "Title",
+                              labelStyle: TextStyle(
+                                color: Colors.black, // สีของ Label
+                                fontWeight: FontWeight.bold, // ตัวหนา
+                              ),
                               border: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       width: 1, color: Colors.black38))),
@@ -164,6 +168,12 @@ class _PostFormState extends State<PostForm> {
                               val!.isEmpty ? 'Category is required' : null,
                           decoration: InputDecoration(
                               hintText: "Category...",
+                              labelText:
+                                  "Category", // เพิ่ม Label สำหรับ Category
+                              labelStyle: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
                               border: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       width: 1, color: Colors.black38))),
@@ -179,6 +189,12 @@ class _PostFormState extends State<PostForm> {
                               val!.isEmpty ? 'Post body is required' : null,
                           decoration: InputDecoration(
                               hintText: "Post body...",
+                              labelText:
+                                  "Post Body", // เพิ่ม Label สำหรับ Post Body
+                              labelStyle: TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
                               border: OutlineInputBorder(
                                   borderSide: BorderSide(
                                       width: 1, color: Colors.black38))),
