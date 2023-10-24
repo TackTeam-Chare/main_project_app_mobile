@@ -92,35 +92,5 @@ class AuthController extends Controller
             'user' => auth()->user()
         ], 200);
     }
-    public function changePassword(Request $request)
-{
-    $attrs = $request->validate([
-        'current_password' => 'required|string',
-        'new_password' => 'required|string|min:6',
-    ]);
-
-    if (!Hash::check($attrs['current_password'], auth()->user()->password)) {
-        return response([
-            'message' => 'Current password is incorrect.'
-        ], 403);
-    }
-
-    auth()->user()->update([
-        'password' => bcrypt($attrs['new_password'])
-    ]);
-
-    return response([
-        'message' => 'Password changed successfully.'
-    ], 200);
-}
-
-public function deleteAccount()
-{
-    auth()->user()->delete();
-    return response([
-        'message' => 'Account deleted successfully.'
-    ], 200);
-}
-
 
 }

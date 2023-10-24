@@ -68,7 +68,10 @@ class _HomeState extends State<Home> {
           )
         ],
       ),
-      body: currentIndex == 0 ? PostScreen() : Profile(),
+      body:
+      
+      
+       currentIndex == 0 ? PostScreen() : Profile(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(MaterialPageRoute(

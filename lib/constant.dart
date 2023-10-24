@@ -1,13 +1,14 @@
 // ----- STRINGS ------
 import 'package:flutter/material.dart';
 
-const baseURL = 'http://192.168.1.150:8000/api/';
-const loginURL = 'http://192.168.1.150:8000/api/login';
-const registerURL = 'http://192.168.1.150:8000/api/register';
-const logoutURL = 'http://192.168.1.150:8000/api/logout';
-const userURL = 'http://192.168.1.150:8000/api/user';
-const postsURL = 'http://192.168.1.150:8000/api/posts';
-const commentsURL = 'http://192.168.1.150:8000/api/comments';
+const baseURL = 'http://192.168.1.36:8000/api/';
+const loginURL = 'http://192.168.1.36:8000/api/login';
+const registerURL = 'http://192.168.1.36:8000/api/register';
+const logoutURL = 'http://192.168.1.36:8000/api/logout';
+const userURL = 'http://192.168.1.36:8000/api/user';
+const postsURL = 'http://192.168.1.36:8000/api/posts';
+const commentsURL = 'http://192.168.1.36:8000/api/comments';
+
 
 // ----- Errors -----
 const serverError = 'Server error';

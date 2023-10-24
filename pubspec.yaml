@@ -44,6 +44,7 @@ dependencies:
   flutter_search_bar: ^3.0.0-dev.1
   quickalert: ^1.0.2
   flutter_picker: ^2.1.0
+  searchable_listview: ^2.7.1
   
   
 

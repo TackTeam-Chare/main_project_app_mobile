@@ -56,7 +56,7 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-  //update profile
+  // update profile
   void updateProfile() async {
     ApiResponse response =
         await updateUser(txtNameController.text, getStringImage(_imageFile));
@@ -78,6 +78,13 @@ class _ProfileState extends State<Profile> {
     }
   }
 
+  // reset password
+  void resetPassword() async {
+    // Add code to reset the user's password here.
+    // You can use a dialog or navigate to a new page for the password reset process.
+    // For example, you can create a ResetPasswordPage and navigate to it when the "Reset Password" button is pressed.
+  }
+
   @override
   void initState() {
     getUser();
@@ -90,17 +97,16 @@ class _ProfileState extends State<Profile> {
         ? Center(
             child: CircularProgressIndicator(),
           )
-          
         : Padding(
             padding: EdgeInsets.only(top: 40, left: 40, right: 40),
             child: ListView(
               children: [
                 Center(
-                    child: GestureDetector(
-                  child: Container(
-                    width: 110,
-                    height: 110,
-                    decoration: BoxDecoration(
+                  child: GestureDetector(
+                    child: Container(
+                      width: 110,
+                      height: 110,
+                      decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(60),
                         image: _imageFile == null
                             ? user!.image != null
@@ -111,12 +117,14 @@ class _ProfileState extends State<Profile> {
                             : DecorationImage(
                                 image: FileImage(_imageFile ?? File('')),
                                 fit: BoxFit.cover),
-                        color: Colors.amber),
+                        color: Colors.amber,
+                      ),
+                    ),
+                    onTap: () {
+                      getImage();
+                    },
                   ),
-                  onTap: () {
-                    getImage();
-                  },
-                )),
+                ),
                 SizedBox(
                   height: 20,
                 ),
@@ -124,7 +132,7 @@ class _ProfileState extends State<Profile> {
                   key: formKey,
                   child: TextFormField(
                     decoration: kInputDecoration('Name').copyWith(
-                      prefixIcon: Icon(Icons.person_2), // ไอคอนรหัสผ่าน
+                      prefixIcon: Icon(Icons.person_2),
                     ),
                     controller: txtNameController,
                     validator: (val) => val!.isEmpty ? 'Invalid Name' : null,
@@ -135,7 +143,7 @@ class _ProfileState extends State<Profile> {
                 ),
                 TextFormField(
                   decoration: kInputDecoration('Email').copyWith(
-                    prefixIcon: Icon(Icons.email), // ไอคอนรหัสผ่าน
+                    prefixIcon: Icon(Icons.email),
                   ),
                   controller: txtEmailController,
                   validator: (val) => val!.isEmpty ? 'Invalid Email' : null,
@@ -145,10 +153,25 @@ class _ProfileState extends State<Profile> {
                 ),
                 TextFormField(
                   decoration: kInputDecoration('Password').copyWith(
-                    prefixIcon: Icon(Icons.lock), // ไอคอนรหัสผ่าน
+                    prefixIcon: Icon(Icons.lock),
                   ),
                   controller: txtPasswordController,
                   validator: (val) => val!.isEmpty ? 'Invalid Password' : null,
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    resetPassword();
+                  },
+                  child: Text(
+                    'รีเซ็ตรหัสผ่าน',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.blue,
+                  ),
                 ),
                 SizedBox(
                   height: 20,
@@ -160,7 +183,7 @@ class _ProfileState extends State<Profile> {
                     });
                     updateProfile();
                   }
-                })
+                }),
               ],
             ),
           );
