@@ -127,6 +127,14 @@ class _PostScreenState extends State<PostScreen> {
                     decoration: InputDecoration(
                       hintText: 'Search posts...',
                       prefixIcon: Icon(Icons.search),
+                       suffixIcon: IconButton(
+        icon: Icon(Icons.clear),
+        onPressed: () {
+          _searchController.clear();
+          filterPosts('');
+        },
+      ),
+   
                     ),
                     onChanged: (value) {
                       filterPosts(value);
