@@ -5,6 +5,37 @@ import 'package:test_blog_app_project/serveices/user_service.dart';
 import '../constant.dart';
 import '../models/post.dart';
 
+
+// Get posts by category
+Future<ApiResponse> getPostsByCategory(String category) async {
+  ApiResponse apiResponse = ApiResponse();
+  try {
+    String token = await getToken();
+    final response = await http.get(
+      Uri.parse('$postsURL?category=$category'),  // แนบความสำคัญของหมวดหมู่ใน URL
+      headers: {'Accept': 'application/json', 'Authorization': 'Bearer $token'},
+    );
+
+    switch (response.statusCode) {
+      case 200:
+        apiResponse.data = jsonDecode(response.body)['posts']
+            .map((p) => Post.fromJson(p))
+            .toList();
+        apiResponse.data as List<dynamic>;
+        break;
+      case 401:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+        break;
+    }
+  } catch (e) {
+    apiResponse.error = serverError;
+  }
+  return apiResponse;
+}
+
 // get all posts
 Future<ApiResponse> getPosts() async {
   ApiResponse apiResponse = ApiResponse();

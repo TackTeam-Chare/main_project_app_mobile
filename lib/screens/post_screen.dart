@@ -31,26 +31,33 @@ class _PostScreenState extends State<PostScreen> {
   }
 
   Future<void> retrievePosts() async {
-    userId = await getUserId();
-    ApiResponse response = await getPosts();
+  userId = await getUserId();
+  ApiResponse response;
 
-    if (response.error == null) {
-      setState(() {
-        _postList = response.data as List<dynamic>;
-        _filteredPostList = List.from(_postList);
-        _loading = _loading ? !_loading : _loading;
-      });
-    } else if (response.error == unauthorized) {
-      logout().then((value) {
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => Login()), (route) => false);
-      });
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('${response.error}'),
-      ));
-    }
+  if (_searchController.text.isNotEmpty) {
+    response = await getPostsByCategory(_searchController.text);
+  } else {
+    response = await getPosts();
   }
+
+  if (response.error == null) {
+    setState(() {
+      _postList = response.data as List<dynamic>;
+      _filteredPostList = List.from(_postList);
+      _loading = _loading ? !_loading : _loading;
+    });
+  } else if (response.error == unauthorized) {
+    logout().then((value) {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => Login()), (route) => false);
+    });
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Text('${response.error}'),
+    ));
+  }
+}
+
 
   void _handleDeletePost(int postId) async {
     bool confirmDelete = await showDialog(
@@ -126,7 +133,10 @@ class _PostScreenState extends State<PostScreen> {
                     focusNode: _searchFocus,
                     decoration: InputDecoration(
                       hintText: 'Search posts...',
+                      labelText: "Search",
+                      border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(25.0))),
                       prefixIcon: Icon(Icons.search),
+                      
                        suffixIcon: IconButton(
         icon: Icon(Icons.clear),
         onPressed: () {
@@ -143,6 +153,7 @@ class _PostScreenState extends State<PostScreen> {
                 ),
                 Expanded(
                   child: ListView.builder(
+                     shrinkWrap: true,
                     itemCount: _filteredPostList.length,
                     itemBuilder: (BuildContext context, int index) {
                       Post post = _filteredPostList[index];
@@ -341,19 +352,21 @@ class _PostScreenState extends State<PostScreen> {
           );
   }
 
-  void filterPosts(String searchText) {
-    if (searchText.isEmpty) {
-      setState(() {
-        _filteredPostList = List.from(_postList);
-      });
-    } else {
-      setState(() {
-        _filteredPostList = _postList
-            .where((post) =>
-                post.title.toLowerCase().contains(searchText.toLowerCase()) ||
-                post.body.toLowerCase().contains(searchText.toLowerCase()))
-            .toList();
-      });
-    }
+void filterPosts(String searchText) {
+  if (searchText.isEmpty) {
+    setState(() {
+      _filteredPostList = List.from(_postList);
+    });
+  } else {
+    setState(() {
+      _filteredPostList = _postList
+          .where((post) =>
+              post.title.toLowerCase().contains(searchText.toLowerCase()) ||
+              post.body.toLowerCase().contains(searchText.toLowerCase()) ||
+              post.category.toLowerCase().contains(searchText.toLowerCase()))
+          .toList();
+    });
   }
+}
+
 }
