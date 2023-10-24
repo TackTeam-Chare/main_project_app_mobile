@@ -8,6 +8,16 @@ use App\Models\User;
 
 class AuthController extends Controller
 {
+    public function deleteUser()
+{
+    $user = auth()->user();
+    $user->delete();
+
+    auth()->logout(); // ล็อกเอาท์ผู้ใช้หลังจากลบบัญชี
+
+    return response(['message' => 'User deleted successfully.'], 200);
+}
+
     //Register user
     public function register(Request $request)
     {
