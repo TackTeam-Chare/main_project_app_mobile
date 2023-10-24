@@ -109,6 +109,35 @@ Future<ApiResponse> getUserDetail() async {
   }
   return apiResponse;
 }
+Future<ApiResponse> deleteAccount() async {
+  ApiResponse apiResponse = ApiResponse();
+  try {
+    String token = await getToken();
+    final response = await http.delete(
+      Uri.parse(userURL),
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    switch (response.statusCode) {
+      case 200:
+        apiResponse.data = jsonDecode(response.body)['message'];
+        await logout(); // ออกจากระบบหลังจากลบบัญชี
+        break;
+      case 401:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+        break;
+    }
+  } catch (e) {
+    apiResponse.error = serverError;
+  }
+  return apiResponse;
+}
 
 // Update user
 Future<ApiResponse> updateUser(String name, String? image) async {

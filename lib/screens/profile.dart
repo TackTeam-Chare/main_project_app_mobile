@@ -84,6 +84,49 @@ class _ProfileState extends State<Profile> {
     // You can use a dialog or navigate to a new page for the password reset process.
     // For example, you can create a ResetPasswordPage and navigate to it when the "Reset Password" button is pressed.
   }
+  void _showDeleteAccountDialog() async {
+  bool confirmDelete = await showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Confirm Deletion'),
+        content: Text('Are you sure you want to delete your account?'),
+        actions: <Widget>[
+          TextButton(
+            child: Text('No'),
+            onPressed: () {
+              Navigator.of(context).pop(false);
+            },
+          ),
+          TextButton(
+            child: Text('Yes'),
+            onPressed: () {
+              Navigator.of(context).pop(true);
+            },
+          ),
+        ],
+      );
+    },
+  );
+
+  if (confirmDelete == true) {
+    _deleteAccount();
+  }
+}
+void _deleteAccount() async {
+  ApiResponse response = await deleteAccount();
+  if (response.error == null) {
+    // ลบบัญชีผู้ใช้สำเร็จ และเปลี่ยนไปหน้าล็อกอิน
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => Login()),
+      (route) => false,
+    );
+  } else {
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('${response.error}')));
+  }
+}
+
 
   @override
   void initState() {
@@ -172,7 +215,13 @@ class _ProfileState extends State<Profile> {
                   style: ElevatedButton.styleFrom(
                     primary: Colors.blue,
                   ),
+                  
                 ),
+                
+
+                
+                
+                
                 SizedBox(
                   height: 20,
                 ),
@@ -184,6 +233,21 @@ class _ProfileState extends State<Profile> {
                     updateProfile();
                   }
                 }),
+                 SizedBox(
+                  height: 20,
+                ),
+                ElevatedButton(
+  onPressed: () {
+    _showDeleteAccountDialog();
+  },
+  child: Text(
+    'Delete Account',
+    style: TextStyle(color: Colors.white),
+  ),
+  style: ElevatedButton.styleFrom(
+    primary: Colors.red, // เปลี่ยนสีปุ่มเป็นสีแดง
+  ),
+),
               ],
             ),
           );
