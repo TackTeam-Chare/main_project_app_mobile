@@ -93,6 +93,11 @@ class _PostScreenState extends State<PostScreen> {
     if (confirmDelete == true) {
       ApiResponse response = await deletePost(postId);
       if (response.error == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('บทความถูกลบเเล้ว'),
+          ),
+        );
         retrievePosts();
       } else if (response.error == unauthorized) {
         logout().then((value) {
@@ -101,6 +106,11 @@ class _PostScreenState extends State<PostScreen> {
               (route) => false);
         });
       } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('ลบไม่สำเร็จ'),
+          ),
+        );
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text('${response.error}')));
       }
@@ -220,6 +230,24 @@ class _PostScreenState extends State<PostScreen> {
                                                             .black), // เพิ่มไอคอน Person
                                                     Text(
                                                       'User : ${post.user!.name}',
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                        fontSize: 12,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.all(8.0),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(Icons.email,
+                                                        color: Colors.black),
+                                                    Text(
+                                                      'Email : ${post.user!.email}',
                                                       style: TextStyle(
                                                         fontWeight:
                                                             FontWeight.w600,
@@ -350,12 +378,8 @@ class _PostScreenState extends State<PostScreen> {
                                     padding: const EdgeInsets.all(20),
                                     child: Row(
                                       children: [
-                                        Icon(Icons.content_paste,
-                                            size:
-                                                20), // ไอคอนสำหรับเนื้อหา (body)
-                                        SizedBox(
-                                            width:
-                                                8), // ระยะห่างระหว่างไอคอนกับข้อความ
+                                        Icon(Icons.content_paste, size: 20),
+                                        SizedBox(width: 8),
                                         Text(
                                           '${post.body}',
                                           style: TextStyle(fontSize: 16),

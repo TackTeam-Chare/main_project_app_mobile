@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:test_blog_app_project/constant.dart';
 import 'package:test_blog_app_project/models/api_response.dart';
 import 'package:test_blog_app_project/models/post.dart';
@@ -21,14 +22,12 @@ class PostForm extends StatefulWidget {
 class _PostFormState extends State<PostForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _txtControllerBody = TextEditingController();
-  final TextEditingController _txtControllerTitle =
-      TextEditingController(); // Add title field
-  final TextEditingController _txtControllerCategory =
-      TextEditingController(); // Add category field
+  final TextEditingController _txtControllerTitle = TextEditingController();
+  final TextEditingController _txtControllerCategory = TextEditingController();
   bool _loading = false;
   File? _imageFile;
   final _picker = ImagePicker();
-  String? _imageBase64; // เพิ่มตัวแปรนี้
+  String? _imageBase64;
 
   Future getImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -53,6 +52,19 @@ class _PostFormState extends State<PostForm> {
     );
 
     if (response.error == null) {
+      // WidgetsBinding.instance.addPostFrameCallback((_) {
+      //   QuickAlert.show(
+      //     // แสดง QuickAlert ทันทีเมื่อล็อคอินสำเร็จ
+      //     context: context,
+      //     type: QuickAlertType.info,
+      //     title: 'บทความถูกโพสต์',
+      //   );
+      // });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('บทความถูกโพสต์สำเร็จ'),
+        ),
+      );
       Navigator.of(context).pop();
     } else if (response.error == unauthorized) {
       logout().then((value) => {
@@ -77,6 +89,11 @@ class _PostFormState extends State<PostForm> {
       _txtControllerBody.text,
     );
     if (response.error == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('โพสต์ถูกเเก้ไข'),
+        ),
+      );
       Navigator.of(context).pop();
     } else if (response.error == unauthorized) {
       logout().then((value) => {
@@ -123,18 +140,36 @@ class _PostFormState extends State<PostForm> {
                         width: MediaQuery.of(context).size.width,
                         height: 200,
                         decoration: BoxDecoration(
-                            image: _imageFile == null
-                                ? null
-                                : DecorationImage(
-                                    image: FileImage(_imageFile ?? File('')),
-                                    fit: BoxFit.cover)),
+                          image: _imageFile == null
+                              ? null
+                              : DecorationImage(
+                                  image: FileImage(_imageFile ?? File('')),
+                                  fit: BoxFit.cover,
+                                ),
+                        ),
                         child: Center(
-                          child: IconButton(
-                            icon: Icon(Icons.image,
-                                size: 50, color: Colors.black38),
-                            onPressed: () {
-                              getImage();
-                            },
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              IconButton(
+                                icon: Icon(Icons.image,
+                                    size: 50, color: Colors.black38),
+                                onPressed: () {
+                                  getImage();
+                                },
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(20),
+                                child: Text(
+                                  'Add Image',
+                                  style: TextStyle(
+                                    color: Colors.black38,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -152,8 +187,8 @@ class _PostFormState extends State<PostForm> {
                             hintText: "Title...",
                             labelText: "Title",
                             labelStyle: TextStyle(
-                              color: Colors.black, // สีของ Label
-                              fontWeight: FontWeight.bold, // ตัวหนา
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
                             ),
                             border: OutlineInputBorder(
                               borderSide: BorderSide(
@@ -207,8 +242,7 @@ class _PostFormState extends State<PostForm> {
                               borderSide:
                                   BorderSide(width: 1, color: Colors.black38),
                             ),
-                            prefixIcon: Icon(Icons
-                                .description), // ใส่ไอคอน "description" ที่ถูกต้อง
+                            prefixIcon: Icon(Icons.description),
                           ),
                         ),
                       ),
@@ -231,13 +265,13 @@ class _PostFormState extends State<PostForm> {
                       }
                     },
                     style: TextButton.styleFrom(
-                      backgroundColor: Colors.blue, // สีพื้นหลังของปุ่ม
-                      primary: Colors.white, // สีข้อความภายในปุ่ม
+                      backgroundColor: Colors.blue,
+                      primary: Colors.white,
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.post_add), // ไอคอนสำหรับ "Post"
-                        Text('Post'), // ข้อความ "Post"
+                        Icon(Icons.post_add),
+                        Text('Post'),
                       ],
                     ),
                   ),
