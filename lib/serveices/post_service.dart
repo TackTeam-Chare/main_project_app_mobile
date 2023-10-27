@@ -97,7 +97,7 @@ Future<ApiResponse> getPosts() async {
 
 // Create post
 Future<ApiResponse> createPost(
-    String title, List<String> categories, String body) async {
+    String title, List<String> categories, String body, String? image) async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
@@ -106,8 +106,10 @@ Future<ApiResponse> createPost(
       headers: {'Accept': 'application/json', 'Authorization': 'Bearer $token'},
       body: {
         'title': title,
-        'category': categories.join(','),
+        'category': categories
+            .join(','), // Join categories into a comma-separated string
         'body': body,
+        if (image != null) 'image': image,
       },
     );
 
