@@ -142,8 +142,8 @@ class _PostScreenState extends State<PostScreen> {
                       hintText: 'Search posts...',
                       labelText: "Search",
                       border: OutlineInputBorder(
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(25.0))),
+                        borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                      ),
                       prefixIcon: Icon(Icons.search),
                       suffixIcon: IconButton(
                         icon: Icon(Icons.clear),
@@ -159,66 +159,66 @@ class _PostScreenState extends State<PostScreen> {
                   ),
                 ),
                 Expanded(
-                  child:
-                      _noSearchResults // เพิ่มเงื่อนไขเพื่อตรวจสอบ _noSearchResults
-                          ? Center(
-                              child: Text(
-                                'No search results found.',
-                                style: noSearchResultsTextStyle,
-                              ), // ข้อความที่จะแสดง
-                            )
-                          : ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: _filteredPostList.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                Post post = _filteredPostList[index];
-                                return Card(
-                                  elevation: 10,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal: 18, vertical: 12),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                  child: _noSearchResults
+                      ? Center(
+                          child: Text(
+                            'No search results found.',
+                            style: noSearchResultsTextStyle,
+                          ),
+                        )
+                      : ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: _filteredPostList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            Post post = _filteredPostList[index];
+                            return Card(
+                              elevation: 10,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: 18, vertical: 12),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
                                         children: [
-                                          Row(
+                                          Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Container(
+                                              width: 48,
+                                              height: 48,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                image: post.user!.image != null
+                                                    ? DecorationImage(
+                                                        image: NetworkImage(
+                                                            '${post.user!.image}'),
+                                                        fit: BoxFit.cover,
+                                                      )
+                                                    : null,
+                                                color: Colors.amber,
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(width: 12),
+                                          Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Padding(
                                                 padding:
                                                     const EdgeInsets.all(8.0),
-                                                child: Container(
-                                                  width: 48,
-                                                  height: 48,
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    image: post.user!.image !=
-                                                            null
-                                                        ? DecorationImage(
-                                                            image: NetworkImage(
-                                                                '${post.user!.image}'),
-                                                            fit: BoxFit.cover,
-                                                          )
-                                                        : null,
-                                                    color: Colors.amber,
-                                                  ),
-                                                ),
-                                              ),
-                                              SizedBox(width: 12),
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: Text(
+                                                child: Row(
+                                                  children: [
+                                                    Icon(Icons.person,
+                                                        color: Colors
+                                                            .black), // เพิ่มไอคอน Person
+                                                    Text(
                                                       'User : ${post.user!.name}',
                                                       style: TextStyle(
                                                         fontWeight:
@@ -226,165 +226,199 @@ class _PostScreenState extends State<PostScreen> {
                                                         fontSize: 12,
                                                       ),
                                                     ),
+                                                  ],
+                                                ),
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Icon(Icons.title,
+                                                      color: Colors.black),
+                                                  // Text(
+                                                  //   'Title : ',
+                                                  //   style: TextStyle(
+                                                  //     color: Colors.black,
+                                                  //     fontWeight:
+                                                  //         FontWeight.bold,
+                                                  //     fontSize: 22,
+                                                  //   ),
+                                                  // ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Text(
+                                                      '${post.title}',
+                                                      style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 26,
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
                                                   ),
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        'Title : ',
-                                                        style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 22,
-                                                        ),
-                                                      ),
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(8.0),
-                                                        child: Text(
-                                                          '${post.title}',
-                                                          style: TextStyle(
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            fontSize: 26,
-                                                            color: Colors.black,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Icon(Icons.category,
+                                                        color: Colors.black),
                                                   ),
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        'Category : ',
-                                                        style: TextStyle(
-                                                          color: Colors.black,
-                                                          fontSize: 20,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                      Text(
-                                                        '${post.category}',
-                                                        style: TextStyle(
-                                                          color: const Color
-                                                              .fromARGB(
+                                                  Text(
+                                                    'Category : ',
+                                                    style: TextStyle(
+                                                      color: Colors.black,
+                                                      fontSize: 20,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    '${post.category}',
+                                                    style: TextStyle(
+                                                      color:
+                                                          const Color.fromARGB(
                                                               255, 0, 0, 0),
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 18,
-                                                        ),
-                                                      ),
-                                                    ],
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 18,
+                                                    ),
                                                   ),
                                                 ],
                                               ),
                                             ],
                                           ),
-                                          if (post.user!.id == userId)
-                                            PopupMenuButton(
-                                              child: Icon(
-                                                Icons.more_vert,
-                                                color: Colors.black,
-                                              ),
-                                              itemBuilder: (context) => [
-                                                PopupMenuItem(
-                                                  child: Text('Edit'),
-                                                  value: 'edit',
-                                                ),
-                                                PopupMenuItem(
-                                                  child: Text('Delete'),
-                                                  value: 'delete',
-                                                )
-                                              ],
-                                              onSelected: (val) {
-                                                if (val == 'edit') {
-                                                  Navigator.of(context)
-                                                      .push(MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        PostForm(
-                                                      title: 'Edit Post',
-                                                      post: post,
-                                                    ),
-                                                  ));
-                                                } else {
-                                                  _handleDeletePost(
-                                                      post.id ?? 0);
-                                                }
-                                              },
-                                            ),
                                         ],
                                       ),
-                                      SizedBox(height: 12),
-                                      Padding(
-                                        padding: const EdgeInsets.all(20),
-                                        child: Text(
+                                      if (post.user!.id == userId)
+                                        PopupMenuButton(
+                                          child: Icon(
+                                            Icons.more_vert,
+                                            color: Colors.black,
+                                          ),
+                                          itemBuilder: (context) => [
+                                            PopupMenuItem(
+                                              child: Row(
+                                                children: [
+                                                  Icon(Icons.edit,
+                                                      size: 20), // ไอคอน Edit
+                                                  SizedBox(
+                                                      width:
+                                                          8), // ระยะห่างระหว่างไอคอนและข้อความ 'Edit'
+                                                  Text('Edit'),
+                                                ],
+                                                mainAxisSize: MainAxisSize.min,
+                                              ),
+                                              value: 'edit',
+                                            ),
+                                            PopupMenuItem(
+                                              child: Row(
+                                                children: [
+                                                  Icon(Icons.delete,
+                                                      size: 20), // ไอคอน Delete
+                                                  SizedBox(
+                                                      width:
+                                                          8), // ระยะห่างระหว่างไอคอนและข้อความ 'Delete'
+                                                  Text('Delete'),
+                                                ],
+                                                mainAxisSize: MainAxisSize.min,
+                                              ),
+                                              value: 'delete',
+                                            )
+                                          ],
+                                          onSelected: (val) {
+                                            if (val == 'edit') {
+                                              Navigator.of(context)
+                                                  .push(MaterialPageRoute(
+                                                builder: (context) => PostForm(
+                                                  title: 'Edit Post',
+                                                  post: post,
+                                                ),
+                                              ));
+                                            } else {
+                                              _handleDeletePost(post.id ?? 0);
+                                            }
+                                          },
+                                        )
+                                    ],
+                                  ),
+                                  SizedBox(height: 12),
+                                  Padding(
+                                    padding: const EdgeInsets.all(20),
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.content_paste,
+                                            size:
+                                                20), // ไอคอนสำหรับเนื้อหา (body)
+                                        SizedBox(
+                                            width:
+                                                8), // ระยะห่างระหว่างไอคอนกับข้อความ
+                                        Text(
                                           '${post.body}',
                                           style: TextStyle(fontSize: 16),
                                         ),
-                                      ),
-                                      if (post.image != null)
-                                        Container(
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          height: 180,
-                                          margin: EdgeInsets.only(top: 12),
-                                          decoration: BoxDecoration(
-                                            image: DecorationImage(
-                                              image:
-                                                  NetworkImage('${post.image}'),
-                                              fit: BoxFit.cover,
-                                            ),
-                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                  if (post.image != null)
+                                    Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      height: 180,
+                                      margin: EdgeInsets.only(top: 12),
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                          image: NetworkImage('${post.image}'),
+                                          fit: BoxFit.cover,
                                         ),
-                                      Row(
-                                        children: [
-                                          kLikeAndComment(
-                                            post.likesCount ?? 0,
-                                            post.selfLiked == true
-                                                ? Icons.favorite
-                                                : Icons.favorite_outline,
-                                            post.selfLiked == true
-                                                ? Colors.red
-                                                : Colors.black54,
-                                            () {
-                                              _handlePostLikeDislike(
-                                                  post.id ?? 0);
-                                            },
-                                          ),
-                                          Container(
-                                            height: 25,
-                                            width: 0.5,
-                                            color: Colors.black38,
-                                          ),
-                                          kLikeAndComment(
-                                            post.commentsCount ?? 0,
-                                            Icons.sms_outlined,
-                                            Colors.black54,
-                                            () {
-                                              Navigator.of(context)
-                                                  .push(MaterialPageRoute(
-                                                builder: (context) =>
-                                                    CommentScreen(
-                                                  postId: post.id,
-                                                ),
-                                              ));
-                                            },
-                                          ),
-                                        ],
+                                      ),
+                                    ),
+                                  Row(
+                                    children: [
+                                      kLikeAndComment(
+                                        post.likesCount ?? 0,
+                                        post.selfLiked == true
+                                            ? Icons.favorite
+                                            : Icons.favorite_outline,
+                                        post.selfLiked == true
+                                            ? Colors.red
+                                            : Colors.black54,
+                                        () {
+                                          _handlePostLikeDislike(post.id ?? 0);
+                                        },
                                       ),
                                       Container(
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        height: 0.5,
-                                        color: Colors.black26,
+                                        height: 25,
+                                        width: 0.5,
+                                        color: Colors.black38,
+                                      ),
+                                      kLikeAndComment(
+                                        post.commentsCount ?? 0,
+                                        Icons.sms_outlined,
+                                        Colors.black54,
+                                        () {
+                                          Navigator.of(context)
+                                              .push(MaterialPageRoute(
+                                            builder: (context) => CommentScreen(
+                                              postId: post.id,
+                                            ),
+                                          ));
+                                        },
                                       ),
                                     ],
                                   ),
-                                );
-                              },
-                            ),
+                                  Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    height: 0.5,
+                                    color: Colors.black26,
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
+                        ),
                 ),
               ],
             ),
