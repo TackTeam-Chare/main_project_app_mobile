@@ -1,6 +1,6 @@
-import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
+
 
 import 'package:test_blog_app_project/constant.dart';
 import 'package:test_blog_app_project/models/api_response.dart';
@@ -25,8 +25,7 @@ class _PostFormState extends State<PostForm> {
   final TextEditingController _txtControllerTitle = TextEditingController();
   // final TextEditingController _txtControllerCategory = TextEditingController();
   bool _loading = false;
-  File? _imageFile;
-  final _picker = ImagePicker();
+
 
   String? selectedCategory;
   List<String> selectedCategories = [];
@@ -41,20 +40,10 @@ class _PostFormState extends State<PostForm> {
     "โซเชียล"
   ];
 
-  Future getImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      final imageFile = File(pickedFile.path);
-      final String? imageBase64 = await getStringImage(imageFile);
-
-      setState(() {
-        _imageFile = imageFile;
-      });
-    }
-  }
+ 
 
   void _createPost() async {
-    String? image = _imageFile == null ? null : getStringImage(_imageFile);
+   
     ApiResponse response = await createPost(
       // _txtControllerTitle.text, // Send title
       // _txtControllerCategory.text, // Send category
@@ -62,8 +51,8 @@ class _PostFormState extends State<PostForm> {
       // image,
       _txtControllerTitle.text,
       selectedCategories,
-      _txtControllerBody.text,
-      image,
+      _txtControllerBody.text
+   
     );
 
     if (response.error == null) {
@@ -151,45 +140,6 @@ class _PostFormState extends State<PostForm> {
             )
           : ListView(
               children: [
-                widget.post != null
-                    ? SizedBox()
-                    : Container(
-                        width: MediaQuery.of(context).size.width,
-                        height: 200,
-                        decoration: BoxDecoration(
-                          image: _imageFile == null
-                              ? null
-                              : DecorationImage(
-                                  image: FileImage(_imageFile ?? File('')),
-                                  fit: BoxFit.cover,
-                                ),
-                        ),
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.image,
-                                    size: 50, color: Colors.black38),
-                                onPressed: () {
-                                  getImage();
-                                },
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(20),
-                                child: Text(
-                                  'Add Image',
-                                  style: TextStyle(
-                                    color: Colors.black38,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
                 Form(
                   key: _formKey,
                   child: Column(
