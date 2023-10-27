@@ -149,15 +149,20 @@ class _PostFormState extends State<PostForm> {
                           validator: (val) =>
                               val!.isEmpty ? 'Title is required' : null,
                           decoration: InputDecoration(
-                              hintText: "Title...",
-                              labelText: "Title",
-                              labelStyle: TextStyle(
-                                color: Colors.black, // สีของ Label
-                                fontWeight: FontWeight.bold, // ตัวหนา
+                            hintText: "Title...",
+                            labelText: "Title",
+                            labelStyle: TextStyle(
+                              color: Colors.black, // สีของ Label
+                              fontWeight: FontWeight.bold, // ตัวหนา
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                width: 1,
+                                color: Colors.black38,
                               ),
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      width: 1, color: Colors.black38))),
+                            ),
+                            prefixIcon: Icon(Icons.title),
+                          ),
                         ),
                       ),
                       Padding(
@@ -167,16 +172,20 @@ class _PostFormState extends State<PostForm> {
                           validator: (val) =>
                               val!.isEmpty ? 'Category is required' : null,
                           decoration: InputDecoration(
-                              hintText: "Category...",
-                              labelText:
-                                  "Category", // เพิ่ม Label สำหรับ Category
-                              labelStyle: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
+                            hintText: "Category...",
+                            labelText: "Category",
+                            labelStyle: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(
+                                width: 1,
+                                color: Colors.black38,
                               ),
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      width: 1, color: Colors.black38))),
+                            ),
+                            prefixIcon: Icon(Icons.category),
+                          ),
                         ),
                       ),
                       Padding(
@@ -188,16 +197,19 @@ class _PostFormState extends State<PostForm> {
                           validator: (val) =>
                               val!.isEmpty ? 'Post body is required' : null,
                           decoration: InputDecoration(
-                              hintText: "Post body...",
-                              labelText:
-                                  "Post Body", // เพิ่ม Label สำหรับ Post Body
-                              labelStyle: TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.bold,
-                              ),
-                              border: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                      width: 1, color: Colors.black38))),
+                            hintText: "Post body...",
+                            labelText: "Post Body",
+                            labelStyle: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            border: OutlineInputBorder(
+                              borderSide:
+                                  BorderSide(width: 1, color: Colors.black38),
+                            ),
+                            prefixIcon: Icon(Icons
+                                .description), // ใส่ไอคอน "description" ที่ถูกต้อง
+                          ),
                         ),
                       ),
                     ],
@@ -205,19 +217,31 @@ class _PostFormState extends State<PostForm> {
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8),
-                  child: kTextButton('Post', () {
-                    if (_formKey.currentState!.validate()) {
-                      setState(() {
-                        _loading = !_loading;
-                      });
-                      if (widget.post == null) {
-                        _createPost();
-                      } else {
-                        _editPost(widget.post!.id ?? 0);
+                  child: TextButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        setState(() {
+                          _loading = !_loading;
+                        });
+                        if (widget.post == null) {
+                          _createPost();
+                        } else {
+                          _editPost(widget.post!.id ?? 0);
+                        }
                       }
-                    }
-                  }),
-                )
+                    },
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.blue, // สีพื้นหลังของปุ่ม
+                      primary: Colors.white, // สีข้อความภายในปุ่ม
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.post_add), // ไอคอนสำหรับ "Post"
+                        Text('Post'), // ข้อความ "Post"
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
     );
