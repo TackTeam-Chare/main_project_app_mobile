@@ -4,6 +4,7 @@ import 'package:test_blog_app_project/models/api_response.dart';
 import 'package:test_blog_app_project/serveices/user_service.dart';
 import '../constant.dart';
 import '../models/post.dart';
+
 Future<ApiResponse> getCategories() async {
   ApiResponse apiResponse = ApiResponse();
   try {
@@ -31,7 +32,6 @@ Future<ApiResponse> getCategories() async {
   }
   return apiResponse;
 }
-
 
 // Get posts by category
 Future<ApiResponse> getPostsByCategory(String category) async {
@@ -97,7 +97,7 @@ Future<ApiResponse> getPosts() async {
 
 // Create post
 Future<ApiResponse> createPost(
-    String title, List<String> categories, String body, String? image) async {
+    String title, List<String> categories, String body) async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
@@ -106,10 +106,8 @@ Future<ApiResponse> createPost(
       headers: {'Accept': 'application/json', 'Authorization': 'Bearer $token'},
       body: {
         'title': title,
-        'category': categories
-            .join(','), // Join categories into a comma-separated string
+        'category': categories.join(','),
         'body': body,
-        if (image != null) 'image': image,
       },
     );
 

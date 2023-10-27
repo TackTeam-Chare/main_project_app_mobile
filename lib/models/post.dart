@@ -10,6 +10,7 @@ class Post {
   int? commentsCount;
   User? user;
   bool? selfLiked;
+  
 
   Post({
     this.id,

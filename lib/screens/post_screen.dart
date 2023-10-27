@@ -295,15 +295,15 @@ class _PostScreenState extends State<PostScreen> {
                                                     child: Icon(Icons.category,
                                                         color: Colors.black),
                                                   ),
-                                                  Text(
-                                                    'Category : ',
-                                                    style: TextStyle(
-                                                      color: Colors.black,
-                                                      fontSize: 20,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                  ),
+                                                  // Text(
+                                                  //   'Category : ',
+                                                  //   style: TextStyle(
+                                                  //     color: Colors.black,
+                                                  //     fontSize: 20,
+                                                  //     fontWeight:
+                                                  //         FontWeight.bold,
+                                                  //   ),
+                                                  // ),
                                                   Text(
                                                     '${post.category}',
                                                     style: TextStyle(
