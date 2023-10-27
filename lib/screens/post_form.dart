@@ -218,26 +218,37 @@ class _PostFormState extends State<PostForm> {
                         ),
                       ),
                       Wrap(
-                        children: categories.map((category) {
-                          bool isSelected =
-                              selectedCategories.contains(category);
-                          return Padding(
-                            padding: const EdgeInsets.all(4.0),
-                            child: InputChip(
-                              label: Text(category),
-                              selected: isSelected,
-                              onSelected: (selected) {
-                                setState(() {
-                                  if (selected) {
-                                    selectedCategories.add(category);
-                                  } else {
-                                    selectedCategories.remove(category);
-                                  }
-                                });
-                              },
+                        children: [
+                          Center(
+                            child: Text(
+                              'หมวดหมู่',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          );
-                        }).toList(),
+                          ),
+                          ...categories.map((category) {
+                            bool isSelected =
+                                selectedCategories.contains(category);
+                            return Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: InputChip(
+                                label: Text(category),
+                                selected: isSelected,
+                                onSelected: (selected) {
+                                  setState(() {
+                                    if (selected) {
+                                      selectedCategories.add(category);
+                                    } else {
+                                      selectedCategories.remove(category);
+                                    }
+                                  });
+                                },
+                              ),
+                            );
+                          }).toList(),
+                        ],
                       ),
 
                       // Padding(
