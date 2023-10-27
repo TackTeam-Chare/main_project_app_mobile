@@ -2,8 +2,8 @@ import 'user.dart';
 
 class Post {
   int? id;
-  String? title; // เพิ่ม title
-  String? category; // เพิ่ม category
+  String? title;
+  String? category;
   String? body;
   String? image;
   int? likesCount;

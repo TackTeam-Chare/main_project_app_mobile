@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:quickalert/quickalert.dart';
+
 import 'package:test_blog_app_project/constant.dart';
 import 'package:test_blog_app_project/models/api_response.dart';
 import 'package:test_blog_app_project/models/post.dart';
@@ -23,11 +23,24 @@ class _PostFormState extends State<PostForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _txtControllerBody = TextEditingController();
   final TextEditingController _txtControllerTitle = TextEditingController();
-  final TextEditingController _txtControllerCategory = TextEditingController();
+  // final TextEditingController _txtControllerCategory = TextEditingController();
   bool _loading = false;
   File? _imageFile;
   final _picker = ImagePicker();
   String? _imageBase64;
+  String? selectedCategory;
+  List<String> selectedCategories = [];
+
+  List<String> categories = [
+    "ศาสนา",
+    "การศึกษา",
+    "การท่องเที่ยว",
+    "กีฬา",
+    "เกมส์",
+    "การเมือง",
+    "โซเชียล"
+    // เพิ่มหมวดหมู่อื่นๆตามที่คุณต้องการ
+  ];
 
   Future getImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -45,8 +58,12 @@ class _PostFormState extends State<PostForm> {
   void _createPost() async {
     String? image = _imageFile == null ? null : getStringImage(_imageFile);
     ApiResponse response = await createPost(
-      _txtControllerTitle.text, // Send title
-      _txtControllerCategory.text, // Send category
+      // _txtControllerTitle.text, // Send title
+      // _txtControllerCategory.text, // Send category
+      // _txtControllerBody.text,
+      // image,
+      _txtControllerTitle.text,
+      selectedCategories,
       _txtControllerBody.text,
       image,
     );
@@ -84,14 +101,14 @@ class _PostFormState extends State<PostForm> {
   void _editPost(int postId) async {
     ApiResponse response = await editPost(
       postId,
-      _txtControllerTitle.text, // Send title
-      _txtControllerCategory.text, // Send category
+      _txtControllerTitle.text,
+      selectedCategories, // ใช้ selectedCategory แทน _txtControllerCategory.text
       _txtControllerBody.text,
     );
     if (response.error == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('โพสต์ถูกเเก้ไข'),
+          content: Text('โพสต์ถูกแก้ไข'),
         ),
       );
       Navigator.of(context).pop();
@@ -116,8 +133,9 @@ class _PostFormState extends State<PostForm> {
       _txtControllerBody.text = widget.post!.body ?? '';
       _txtControllerTitle.text =
           widget.post!.title ?? ''; // Set title if available
-      _txtControllerCategory.text =
-          widget.post!.category ?? ''; // Set category if available
+      // _txtControllerCategory.text =
+      //     widget.post!.category ?? ''; // Set category if available
+      selectedCategory = widget.post!.category;
     }
     super.initState();
   }
@@ -200,31 +218,54 @@ class _PostFormState extends State<PostForm> {
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.all(8),
-                        child: TextFormField(
-                          controller: _txtControllerCategory,
-                          validator: (val) =>
-                              val!.isEmpty ? 'Category is required' : null,
-                          decoration: InputDecoration(
-                            hintText: "Category...",
-                            labelText: "Category",
-                            labelStyle: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
+                      Wrap(
+                        children: categories.map((category) {
+                          bool isSelected =
+                              selectedCategories.contains(category);
+                          return Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: InputChip(
+                              label: Text(category),
+                              selected: isSelected,
+                              onSelected: (selected) {
+                                setState(() {
+                                  if (selected) {
+                                    selectedCategories.add(category);
+                                  } else {
+                                    selectedCategories.remove(category);
+                                  }
+                                });
+                              },
                             ),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                width: 1,
-                                color: Colors.black38,
-                              ),
-                            ),
-                            prefixIcon: Icon(Icons.category),
-                          ),
-                        ),
+                          );
+                        }).toList(),
                       ),
+
+                      // Padding(
+                      //   padding: EdgeInsets.all(8),
+                      //   child: TextFormField(
+                      //     controller: _txtControllerCategory,
+                      //     validator: (val) =>
+                      //         val!.isEmpty ? 'Category is required' : null,
+                      //     decoration: InputDecoration(
+                      //       hintText: "Category...",
+                      //       labelText: "Category",
+                      //       labelStyle: TextStyle(
+                      //         color: Colors.black,
+                      //         fontWeight: FontWeight.bold,
+                      //       ),
+                      //       border: OutlineInputBorder(
+                      //         borderSide: BorderSide(
+                      //           width: 1,
+                      //           color: Colors.black38,
+                      //         ),
+                      //       ),
+                      //       prefixIcon: Icon(Icons.category),
+                      //     ),
+                      //   ),
+                      // ),
                       Padding(
-                        padding: EdgeInsets.all(8),
+                        padding: EdgeInsets.all(12),
                         child: TextFormField(
                           controller: _txtControllerBody,
                           keyboardType: TextInputType.multiline,
