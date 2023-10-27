@@ -10,7 +10,7 @@ class Post {
   int? commentsCount;
   User? user;
   bool? selfLiked;
-  
+   List<String> categories;
 
   Post({
     this.id,
@@ -22,6 +22,7 @@ class Post {
     this.commentsCount,
     this.user,
     this.selfLiked,
+    required this.categories,
   });
 
   factory Post.fromJson(Map<String, dynamic> json) {
@@ -37,6 +38,6 @@ class Post {
         user: User(
             id: json['user']['id'],
             name: json['user']['name'],
-            image: json['user']['image']));
+            image: json['user']['image']), categories: []);
   }
 }

@@ -146,8 +146,8 @@ Future<ApiResponse> editPost(
       headers: {'Accept': 'application/json', 'Authorization': 'Bearer $token'},
       body: {
         'title': title,
-        'categories': categories
-            .join(','), // Join categories into a comma-separated string
+        'category': categories
+            .join(','), 
         'body': body,
       },
     );

@@ -45,6 +45,7 @@ class _PostFormState extends State<PostForm> {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       final imageFile = File(pickedFile.path);
+      final String? imageBase64 = await getStringImage(imageFile);
 
       setState(() {
         _imageFile = imageFile;
@@ -99,7 +100,7 @@ class _PostFormState extends State<PostForm> {
     ApiResponse response = await editPost(
       postId,
       _txtControllerTitle.text,
-      selectedCategories, // ใช้ selectedCategory แทน _txtControllerCategory.text
+      selectedCategories,
       _txtControllerBody.text,
     );
     if (response.error == null) {
@@ -133,6 +134,7 @@ class _PostFormState extends State<PostForm> {
       // _txtControllerCategory.text =
       //     widget.post!.category ?? ''; // Set category if available
       selectedCategory = widget.post!.category;
+      selectedCategories = List.from(widget.post!.categories);
     }
     super.initState();
   }
@@ -248,6 +250,30 @@ class _PostFormState extends State<PostForm> {
                           }).toList(),
                         ],
                       ),
+
+                      // Padding(
+                      //   padding: EdgeInsets.all(8),
+                      //   child: TextFormField(
+                      //     controller: _txtControllerCategory,
+                      //     validator: (val) =>
+                      //         val!.isEmpty ? 'Category is required' : null,
+                      //     decoration: InputDecoration(
+                      //       hintText: "Category...",
+                      //       labelText: "Category",
+                      //       labelStyle: TextStyle(
+                      //         color: Colors.black,
+                      //         fontWeight: FontWeight.bold,
+                      //       ),
+                      //       border: OutlineInputBorder(
+                      //         borderSide: BorderSide(
+                      //           width: 1,
+                      //           color: Colors.black38,
+                      //         ),
+                      //       ),
+                      //       prefixIcon: Icon(Icons.category),
+                      //     ),
+                      //   ),
+                      // ),
                       Padding(
                         padding: EdgeInsets.all(12),
                         child: TextFormField(
