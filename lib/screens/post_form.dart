@@ -39,7 +39,6 @@ class _PostFormState extends State<PostForm> {
     "เกมส์",
     "การเมือง",
     "โซเชียล"
-    // เพิ่มหมวดหมู่อื่นๆตามที่คุณต้องการ
   ];
 
   Future getImage() async {
