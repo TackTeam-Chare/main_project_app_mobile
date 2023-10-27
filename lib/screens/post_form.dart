@@ -1,6 +1,4 @@
-
 import 'package:flutter/material.dart';
-
 
 import 'package:test_blog_app_project/constant.dart';
 import 'package:test_blog_app_project/models/api_response.dart';
@@ -26,7 +24,6 @@ class _PostFormState extends State<PostForm> {
   // final TextEditingController _txtControllerCategory = TextEditingController();
   bool _loading = false;
 
-
   String? selectedCategory;
   List<String> selectedCategories = [];
 
@@ -40,20 +37,15 @@ class _PostFormState extends State<PostForm> {
     "โซเชียล"
   ];
 
- 
-
   void _createPost() async {
-   
     ApiResponse response = await createPost(
-      // _txtControllerTitle.text, // Send title
-      // _txtControllerCategory.text, // Send category
-      // _txtControllerBody.text,
-      // image,
-      _txtControllerTitle.text,
-      selectedCategories,
-      _txtControllerBody.text
-   
-    );
+        // _txtControllerTitle.text, // Send title
+        // _txtControllerCategory.text, // Send category
+        // _txtControllerBody.text,
+        // image,
+        _txtControllerTitle.text,
+        selectedCategories,
+        _txtControllerBody.text);
 
     if (response.error == null) {
       // WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -200,30 +192,6 @@ class _PostFormState extends State<PostForm> {
                           }).toList(),
                         ],
                       ),
-
-                      // Padding(
-                      //   padding: EdgeInsets.all(8),
-                      //   child: TextFormField(
-                      //     controller: _txtControllerCategory,
-                      //     validator: (val) =>
-                      //         val!.isEmpty ? 'Category is required' : null,
-                      //     decoration: InputDecoration(
-                      //       hintText: "Category...",
-                      //       labelText: "Category",
-                      //       labelStyle: TextStyle(
-                      //         color: Colors.black,
-                      //         fontWeight: FontWeight.bold,
-                      //       ),
-                      //       border: OutlineInputBorder(
-                      //         borderSide: BorderSide(
-                      //           width: 1,
-                      //           color: Colors.black38,
-                      //         ),
-                      //       ),
-                      //       prefixIcon: Icon(Icons.category),
-                      //     ),
-                      //   ),
-                      // ),
                       Padding(
                         padding: EdgeInsets.all(12),
                         child: TextFormField(

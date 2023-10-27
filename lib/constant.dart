@@ -9,8 +9,6 @@ const userURL = 'http://192.168.1.150:8000/api/user';
 const postsURL = 'http://192.168.1.150:8000/api/posts';
 const commentsURL = 'http://192.168.1.150:8000/api/comments';
 
-
-
 // ----- Errors -----
 const serverError = 'Server error';
 const unauthorized = 'Unauthorized';
@@ -75,6 +73,31 @@ Expanded kLikeAndComment(
               ),
               SizedBox(width: 4),
               Text('$value')
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+Expanded kShareButton(Function onTap) {
+  return Expanded(
+    child: Material(
+      child: InkWell(
+        onTap: () => onTap(),
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 10),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.share,
+                size: 16,
+                color: Colors.black54,
+              ),
+              SizedBox(width: 4),
+              Text('Share')
             ],
           ),
         ),

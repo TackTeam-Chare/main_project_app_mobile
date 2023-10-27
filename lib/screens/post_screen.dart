@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:test_blog_app_project/constant.dart';
 import 'package:test_blog_app_project/models/api_response.dart';
 import 'package:test_blog_app_project/models/post.dart';
@@ -429,6 +430,19 @@ class _PostScreenState extends State<PostScreen> {
                                               postId: post.id,
                                             ),
                                           ));
+                                        },
+                                      ),
+                                      kShareButton(
+                                        () {
+                                          Share.share(
+                                              'Check out this post: ${post.title}');
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                  'Shared post: ${post.title}'),
+                                            ),
+                                          );
                                         },
                                       ),
                                     ],
