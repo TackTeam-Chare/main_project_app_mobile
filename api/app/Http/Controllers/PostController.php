@@ -41,7 +41,8 @@ class PostController extends Controller
             'title' => 'required|string',
             'category' => 'required|string',
             'body' => 'required|string',
-            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Set your validation rules for images
+            'image' => 'string',
+            // 'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Set your validation rules for images
         ]);
 
         // Handle image upload and save
@@ -55,7 +56,7 @@ class PostController extends Controller
             'category' => $attrs['category'],
             'body' => $attrs['body'],
             'user_id' => auth()->user()->id,
-            'image' => $image,
+            'image' => $attrs['image'],
         ]);
 
         return response([
@@ -86,7 +87,8 @@ class PostController extends Controller
             'title' => 'required|string',
             'category' => 'required|string',
             'body' => 'required|string',
-            'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Set your validation rules for images
+            'image' => 'string',
+            // 'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048', // Set your validation rules for images
         ]);
 
         // Handle image upload and save (if a new image is provided)
@@ -99,7 +101,8 @@ class PostController extends Controller
         $post->update([
             'title' => $attrs['title'],
             'category' => $attrs['category'],
-            'body' => $attrs['body']
+            'body' => $attrs['body'],
+            'image' => $attrs['image'],
         ]);
 
         return response([
@@ -134,12 +137,12 @@ class PostController extends Controller
         ], 200);
     }
 
-    // Save image and return file path
-    public function saveImage($image,$path = 'public')
-    {
-        $imageName = Str::random(20) . '.' . $image->getClientOriginalExtension();
-        $path = 'public/images/posts';
-        $image->storeAs($path, $imageName);
-        return asset(Storage::url($path . '/' . $imageName));
-    }
+    // // Save image and return file path
+    // public function saveImage($image,$path = 'public')
+    // {
+    //     $imageName = Str::random(20) . '.' . $image->getClientOriginalExtension();
+    //     $path = 'public/images/posts';
+    //     $image->storeAs($path, $imageName);
+    //     return asset(Storage::url($path . '/' . $imageName));
+    // }
 }

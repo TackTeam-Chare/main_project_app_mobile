@@ -179,8 +179,38 @@ Future<bool> logout() async {
   return await pref.remove('token');
 }
 
-// Get base64 encoded image
-String? getStringImage(File? file) {
-  if (file == null) return null;
-  return base64Encode(file.readAsBytesSync());
+// // Get base64 encoded image
+// String? getStringImage(File? file) {
+//   if (file == null) return null;
+//   return base64Encode(file.readAsBytesSync());
+// }
+// Change user password
+Future<ApiResponse> changePassword(
+    String currentPassword, String newPassword) async {
+  ApiResponse apiResponse = ApiResponse();
+  try {
+    String token = await getToken();
+    final response = await http.put(Uri.parse(changePasswordURL), headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    }, body: {
+      'current_password': currentPassword,
+      'new_password': newPassword,
+    });
+
+    switch (response.statusCode) {
+      case 200:
+        apiResponse.data = jsonDecode(response.body)['message'];
+        break;
+      case 401:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+        break;
+    }
+  } catch (e) {
+    apiResponse.error = serverError;
+  }
+  return apiResponse;
 }

@@ -84,29 +84,47 @@ class AuthController extends Controller
     }
 
     // update user
-    public function update(Request $request)
-    {
-        $user = auth()->user();
-    
-        $attrs = $request->validate([
-            'name' => 'string',
-            'email' => 'email|unique:users,email,' . $user->id,
-            'password' => 'string|min:6',
-        ]);
-    
-        if (isset($attrs['password'])) {
-            $attrs['password'] = bcrypt($attrs['password']);
-        }
-    
-        $user->update($attrs);
-        $message = 'Updated successfully.';
-        if (!$user->wasChanged()) {
-            $message = 'No changes were made.';
-        }
-        return response([
-            'user' => $user,
-            'message' =>$message,
-        ], 200);
+public function update(Request $request)
+{
+    $user = auth()->user();
+
+    $attrs = $request->validate([
+        'name' => 'string',
+        'email' => 'email|unique:users,email,' . $user->id,
+        'password' => 'string|min:6',
+    ]);
+
+    if (isset($attrs['password'])) {
+        $attrs['password'] = bcrypt($attrs['password']);
     }
+
+    $user->update($attrs);
+
+    $message = 'Updated successfully.';
+
+    if (!$user->wasChanged()) {
+        $message = 'No changes were made.';
+    }
+
+    return response([
+        'user' => $user,
+        'message' => $message,
+    ], 200);
+}
+
+public function changePassword(Request $request) {
+    if (Auth::check()) {
+        $user = Auth::user();
+        if (Hash::check($request->input('current_password'), $user->password)) {
+            $user->password = Hash::make($request->input('new_password'));
+            $user->save();
+            return response(['message' => 'รหัสผ่านถูกเปลี่ยนแล้ว'], Response::HTTP_OK);
+        } else {
+            return response(['message' => 'รหัสผ่านปัจจุบันไม่ถูกต้อง'], Response::HTTP_UNAUTHORIZED);
+        }
+    } else {
+        return response(['message' => 'ไม่มีผู้ใช้ล็อกอิน'], Response::HTTP_UNAUTHORIZED);
+    }
+}
 
 }

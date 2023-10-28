@@ -56,10 +56,94 @@ class _ProfileState extends State<Profile> {
     }
   }
 
+  void _showChangePasswordDialog() async {
+    String? currentPassword;
+    String? newPassword;
+
+    bool confirmChangePassword = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Change Password'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  decoration: kInputDecoration('Current Password'),
+                  onChanged: (value) {
+                    currentPassword = value;
+                  },
+                  obscureText: true,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  decoration: kInputDecoration('New Password'),
+                  onChanged: (value) {
+                    newPassword = value;
+                  },
+                  obscureText: true,
+                ),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            TextButton(
+              child: Text('Change'),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmChangePassword == true) {
+      _changePassword(currentPassword, newPassword);
+    }
+  }
+
+  void _changePassword(String? currentPassword, String? newPassword) async {
+    if (currentPassword != null && newPassword != null) {
+      setState(() {
+        loading = true;
+      });
+      ApiResponse response = await changePassword(currentPassword, newPassword);
+
+      if (response.error == null) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('${response.data}')));
+      } else if (response.error == unauthorized) {
+        logout().then((value) => {
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => Login()),
+                  (route) => false)
+            });
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('${response.error}')));
+      }
+
+      setState(() {
+        loading = false;
+      });
+    }
+  }
+
   // update profile
   void updateProfile() async {
-    ApiResponse response =
-        await updateUser(txtNameController.text,txtEmailController.text,txtEmailController.text);
+    ApiResponse response = await updateUser(txtNameController.text,
+        txtEmailController.text, txtEmailController.text);
     setState(() {
       loading = false;
     });
@@ -78,50 +162,49 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-  
   void _showDeleteAccountDialog() async {
-  bool confirmDelete = await showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Confirm Deletion'),
-        content: Text('Are you sure you want to delete your account?'),
-        actions: <Widget>[
-          TextButton(
-            child: Text('No'),
-            onPressed: () {
-              Navigator.of(context).pop(false);
-            },
-          ),
-          TextButton(
-            child: Text('Yes'),
-            onPressed: () {
-              Navigator.of(context).pop(true);
-            },
-          ),
-        ],
-      );
-    },
-  );
-
-  if (confirmDelete == true) {
-    _deleteAccount();
-  }
-}
-void _deleteAccount() async {
-  ApiResponse response = await deleteAccount();
-  if (response.error == null) {
-    // ลบบัญชีผู้ใช้สำเร็จ และเปลี่ยนไปหน้าล็อกอิน
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => Login()),
-      (route) => false,
+    bool confirmDelete = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Confirm Deletion'),
+          content: Text('Are you sure you want to delete your account?'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            TextButton(
+              child: Text('Yes'),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
     );
-  } else {
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text('${response.error}')));
-  }
-}
 
+    if (confirmDelete == true) {
+      _deleteAccount();
+    }
+  }
+
+  void _deleteAccount() async {
+    ApiResponse response = await deleteAccount();
+    if (response.error == null) {
+      // ลบบัญชีผู้ใช้สำเร็จ และเปลี่ยนไปหน้าล็อกอิน
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (context) => Login()),
+        (route) => false,
+      );
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('${response.error}')));
+    }
+  }
 
   @override
   void initState() {
@@ -201,7 +284,7 @@ void _deleteAccount() async {
                 ),
                 ElevatedButton(
                   onPressed: () {
-             
+                    _showChangePasswordDialog();
                   },
                   child: Text(
                     'รีเซ็ตรหัสผ่าน',
@@ -210,13 +293,7 @@ void _deleteAccount() async {
                   style: ElevatedButton.styleFrom(
                     primary: Colors.blue,
                   ),
-                  
                 ),
-                
-
-                
-                
-                
                 SizedBox(
                   height: 20,
                 ),
@@ -228,21 +305,21 @@ void _deleteAccount() async {
                     updateProfile();
                   }
                 }),
-                 SizedBox(
+                SizedBox(
                   height: 20,
                 ),
                 ElevatedButton(
-  onPressed: () {
-    _showDeleteAccountDialog();
-  },
-  child: Text(
-    'Delete Account',
-    style: TextStyle(color: Colors.white),
-  ),
-  style: ElevatedButton.styleFrom(
-    primary: Colors.red, // เปลี่ยนสีปุ่มเป็นสีแดง
-  ),
-),
+                  onPressed: () {
+                    _showDeleteAccountDialog();
+                  },
+                  child: Text(
+                    'Delete Account',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.red, // เปลี่ยนสีปุ่มเป็นสีแดง
+                  ),
+                ),
               ],
             ),
           );

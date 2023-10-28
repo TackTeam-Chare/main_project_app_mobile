@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:test_blog_app_project/constant.dart';
 import 'package:test_blog_app_project/models/api_response.dart';
@@ -144,6 +145,22 @@ class _PostScreenState extends State<PostScreen> {
             },
             child: Column(
               children: [
+                // Container(
+                //                   width: 48,
+                //                   height: 48,
+                //                   decoration: BoxDecoration(
+                //                     shape: BoxShape.circle,
+                //                     image: post.user!.image != null
+                //                         ? DecorationImage(
+                //                             image: NetworkImage(
+                //                                 '${post.user!.image}'),
+                //                             fit: BoxFit.cover,
+                //                           )
+                //                         : null,
+                //                     color: Colors.amber,
+                //                   ),
+                //                 ),
+                //                 SizedBox(width: 12),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: TextField(

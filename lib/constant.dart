@@ -8,6 +8,7 @@ const logoutURL = 'http://192.168.1.150:8000/api/logout';
 const userURL = 'http://192.168.1.150:8000/api/user';
 const postsURL = 'http://192.168.1.150:8000/api/posts';
 const commentsURL = 'http://192.168.1.150:8000/api/comments';
+const changePasswordURL = 'http://192.168.1.150:8000/api/changePassword';
 
 // ----- Errors -----
 const serverError = 'Server error';

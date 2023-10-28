@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:test_blog_app_project/constant.dart';
@@ -21,9 +23,10 @@ class _PostFormState extends State<PostForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _txtControllerBody = TextEditingController();
   final TextEditingController _txtControllerTitle = TextEditingController();
+  final TextEditingController _txtControllerimage = TextEditingController();
   // final TextEditingController _txtControllerCategory = TextEditingController();
   bool _loading = false;
-
+  File? _imageFile;
   String? selectedCategory;
   List<String> selectedCategories = [];
 
@@ -39,13 +42,15 @@ class _PostFormState extends State<PostForm> {
 
   void _createPost() async {
     ApiResponse response = await createPost(
-        // _txtControllerTitle.text, // Send title
-        // _txtControllerCategory.text, // Send category
-        // _txtControllerBody.text,
-        // image,
-        _txtControllerTitle.text,
-        selectedCategories,
-        _txtControllerBody.text);
+      // _txtControllerTitle.text, // Send title
+      // _txtControllerCategory.text, // Send category
+      // _txtControllerBody.text,
+      // image,
+      _txtControllerTitle.text,
+      selectedCategories,
+      _txtControllerBody.text,
+      _txtControllerimage.text,
+    );
 
     if (response.error == null) {
       // WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -132,10 +137,34 @@ class _PostFormState extends State<PostForm> {
             )
           : ListView(
               children: [
+                widget.post != null
+                    ? SizedBox()
+                    : Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: 200,
+                        decoration: BoxDecoration(
+                            image: _imageFile == null
+                                ? null
+                                : DecorationImage(
+                                    image: FileImage(_imageFile ?? File('')),
+                                    fit: BoxFit.cover)),
+                      ),
                 Form(
                   key: _formKey,
                   child: Column(
                     children: [
+                      Padding(
+                        padding: EdgeInsets.all(8),
+                        child: TextFormField(
+                          //enabled: false,
+                          controller: _txtControllerimage,
+                          decoration: InputDecoration(
+                              hintText: "insert image URL here",
+                              border: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      width: 1, color: Colors.black38))),
+                        ),
+                      ),
                       Padding(
                         padding: EdgeInsets.all(8),
                         child: TextFormField(
@@ -250,3 +279,5 @@ class _PostFormState extends State<PostForm> {
     );
   }
 }
+
+class _imageFile {}
