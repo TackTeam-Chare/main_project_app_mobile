@@ -1,9 +1,5 @@
-
-
-
 import 'dart:convert';
 import 'dart:io';
-
 
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -13,16 +9,14 @@ import 'package:test_blog_app_project/models/api_response.dart';
 import 'package:test_blog_app_project/models/user.dart';
 
 // login
-Future<ApiResponse> login (String email, String password) async {
+Future<ApiResponse> login(String email, String password) async {
   ApiResponse apiResponse = ApiResponse();
-  try{
-    final response = await http.post(
-      Uri.parse(loginURL),
-      headers: {'Accept': 'application/json'},
-      body: {'email': email, 'password': password}
-    );
+  try {
+    final response = await http.post(Uri.parse(loginURL),
+        headers: {'Accept': 'application/json'},
+        body: {'email': email, 'password': password});
 
-    switch(response.statusCode){
+    switch (response.statusCode) {
       case 200:
         apiResponse.data = User.fromJson(jsonDecode(response.body));
         break;
@@ -37,30 +31,27 @@ Future<ApiResponse> login (String email, String password) async {
         apiResponse.error = somethingWentWrong;
         break;
     }
-  }
-  catch(e){
+  } catch (e) {
     apiResponse.error = serverError;
   }
 
   return apiResponse;
 }
 
-
 // Register
 Future<ApiResponse> register(String name, String email, String password) async {
   ApiResponse apiResponse = ApiResponse();
   try {
-    final response = await http.post(
-      Uri.parse(registerURL),
-      headers: {'Accept': 'application/json'}, 
-      body: {
-        'name': name,
-        'email': email,
-        'password': password,
-        'password_confirmation': password
-      });
+    final response = await http.post(Uri.parse(registerURL), headers: {
+      'Accept': 'application/json'
+    }, body: {
+      'name': name,
+      'email': email,
+      'password': password,
+      'password_confirmation': password
+    });
 
-    switch(response.statusCode) {
+    switch (response.statusCode) {
       case 200:
         apiResponse.data = User.fromJson(jsonDecode(response.body));
         break;
@@ -72,27 +63,23 @@ Future<ApiResponse> register(String name, String email, String password) async {
         apiResponse.error = somethingWentWrong;
         break;
     }
-  }
-  catch (e) {
+  } catch (e) {
     apiResponse.error = serverError;
   }
   return apiResponse;
 }
-
 
 // User
 Future<ApiResponse> getUserDetail() async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
-    final response = await http.get(
-      Uri.parse(userURL),
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
-      });
+    final response = await http.get(Uri.parse(userURL), headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token'
+    });
 
-    switch(response.statusCode){
+    switch (response.statusCode) {
       case 200:
         apiResponse.data = User.fromJson(jsonDecode(response.body));
         break;
@@ -103,12 +90,12 @@ Future<ApiResponse> getUserDetail() async {
         apiResponse.error = somethingWentWrong;
         break;
     }
-  } 
-  catch(e) {
+  } catch (e) {
     apiResponse.error = serverError;
   }
   return apiResponse;
 }
+
 Future<ApiResponse> deleteAccount() async {
   ApiResponse apiResponse = ApiResponse();
   try {
@@ -140,27 +127,25 @@ Future<ApiResponse> deleteAccount() async {
 }
 
 // Update user
-Future<ApiResponse> updateUser(String name, String? image) async {
+Future<ApiResponse> updateUser(String name, String email, String? image) async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
-    final response = await http.put(
-      Uri.parse(userURL),
-      headers: {
-        'Accept': 'application/json',
-        'Authorization': 'Bearer $token'
-      }, 
-      body: image == null ? {
-        'name': name,
-      } : {
-        'name': name,
-        'image': image
-      });
-      // user can update his/her name or name and image
+    final response = await http.put(Uri.parse(userURL),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $token'
+        },
+        body: image == null
+            ? {
+                'name': name,
+              }
+            : {'name': name, 'email': email, 'image': image});
+    // user can update his/her name or name and image
 
-    switch(response.statusCode) {
+    switch (response.statusCode) {
       case 200:
-        apiResponse.data =jsonDecode(response.body)['message'];
+        apiResponse.data = jsonDecode(response.body)['message'];
         break;
       case 401:
         apiResponse.error = unauthorized;
@@ -170,8 +155,7 @@ Future<ApiResponse> updateUser(String name, String? image) async {
         apiResponse.error = somethingWentWrong;
         break;
     }
-  }
-  catch (e) {
+  } catch (e) {
     apiResponse.error = serverError;
   }
   return apiResponse;
@@ -197,6 +181,6 @@ Future<bool> logout() async {
 
 // Get base64 encoded image
 String? getStringImage(File? file) {
-  if (file == null) return null ;
+  if (file == null) return null;
   return base64Encode(file.readAsBytesSync());
 }

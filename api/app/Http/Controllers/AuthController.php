@@ -86,20 +86,26 @@ class AuthController extends Controller
     // update user
     public function update(Request $request)
     {
+        $user = auth()->user();
+    
         $attrs = $request->validate([
-            'name' => 'required|string'
+            'name' => 'string',
+            'email' => 'email|unique:users,email,' . $user->id,
+            'password' => 'string|min:6',
         ]);
-
-        $image = $this->saveImage($request->image, 'profiles');
-
-        auth()->user()->update([
-            'name' => $attrs['name'],
-            'image' => $image
-        ]);
-
+    
+        if (isset($attrs['password'])) {
+            $attrs['password'] = bcrypt($attrs['password']);
+        }
+    
+        $user->update($attrs);
+        $message = 'Updated successfully.';
+        if (!$user->wasChanged()) {
+            $message = 'No changes were made.';
+        }
         return response([
-            'message' => 'User updated.',
-            'user' => auth()->user()
+            'user' => $user,
+            'message' =>$message,
         ], 200);
     }
 

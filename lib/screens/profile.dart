@@ -59,7 +59,7 @@ class _ProfileState extends State<Profile> {
   // update profile
   void updateProfile() async {
     ApiResponse response =
-        await updateUser(txtNameController.text, getStringImage(_imageFile));
+        await updateUser(txtNameController.text,txtEmailController.text,txtEmailController.text);
     setState(() {
       loading = false;
     });
@@ -78,12 +78,7 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-  // reset password
-  void resetPassword() async {
-    // Add code to reset the user's password here.
-    // You can use a dialog or navigate to a new page for the password reset process.
-    // For example, you can create a ResetPasswordPage and navigate to it when the "Reset Password" button is pressed.
-  }
+  
   void _showDeleteAccountDialog() async {
   bool confirmDelete = await showDialog(
     context: context,
@@ -206,7 +201,7 @@ void _deleteAccount() async {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    resetPassword();
+             
                   },
                   child: Text(
                     'รีเซ็ตรหัสผ่าน',
