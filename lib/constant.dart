@@ -105,3 +105,32 @@ Expanded kShareButton(Function onTap) {
     ),
   );
 }
+// InkWell kShareButton(Function onTap) {
+//   return InkWell(
+//     onTap: () => onTap(),
+//     child: Container(
+//       padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+//       decoration: BoxDecoration(
+//         color: Colors.blue, // สีพื้นหลังของปุ่ม
+//         borderRadius: BorderRadius.circular(25), // กำหนดขอบมน
+//       ),
+//       child: Row(
+//         mainAxisSize: MainAxisSize.min,
+//         children: [
+//           Icon(
+//             Icons.share,
+//             size: 16,
+//             color: Colors.white, // สีไอคอน
+//           ),
+//           SizedBox(width: 4),
+//           Text(
+//             'Share',
+//             style: TextStyle(
+//               color: Colors.white, // สีข้อความ
+//             ),
+//           ),
+//         ],
+//       ),
+//     ),
+//   );
+// }

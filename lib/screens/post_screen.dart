@@ -440,7 +440,7 @@ class _PostScreenState extends State<PostScreen> {
                                               .showSnackBar(
                                             SnackBar(
                                               content: Text(
-                                                  'Shared post: ${post.title}'),
+                                                  'Shared post: ${post.title}\n${post.category}\n${post.body}'),
                                             ),
                                           );
                                         },
