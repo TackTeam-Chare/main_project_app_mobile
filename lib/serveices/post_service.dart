@@ -135,8 +135,8 @@ Future<ApiResponse> createPost(
 }
 
 // Edit post
-Future<ApiResponse> editPost(
-    int postId, String title, List<String> categories, String body) async {
+Future<ApiResponse> editPost(int postId, String title, List<String> categories,
+    String body, String image) async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
@@ -147,6 +147,7 @@ Future<ApiResponse> editPost(
         'title': title,
         'category': categories.join(','),
         'body': body,
+        'image': image,
       },
     );
 

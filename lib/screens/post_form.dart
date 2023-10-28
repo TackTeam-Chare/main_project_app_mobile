@@ -88,6 +88,7 @@ class _PostFormState extends State<PostForm> {
       _txtControllerTitle.text,
       selectedCategories,
       _txtControllerBody.text,
+      _txtControllerimage.text,
     );
     if (response.error == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -121,6 +122,8 @@ class _PostFormState extends State<PostForm> {
       //     widget.post!.category ?? ''; // Set category if available
       selectedCategory = widget.post!.category;
       selectedCategories = List.from(widget.post!.categories);
+
+      _txtControllerimage.text = widget.post!.image ?? '';
     }
     super.initState();
   }

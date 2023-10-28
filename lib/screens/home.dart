@@ -20,7 +20,8 @@ class _HomeState extends State<Home> {
           false, // ไม่อนุญาตให้ปิด Dialog ด้วยการแตะข้ามหน้าต่าง
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirm Exit'),
+          title: Text('Confirm Exit',
+              style: TextStyle(color: Color.fromARGB(255, 0, 0, 0))),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
@@ -67,11 +68,9 @@ class _HomeState extends State<Home> {
             },
           )
         ],
+        backgroundColor: Color.fromARGB(255, 129, 46, 46),
       ),
-      body:
-      
-      
-       currentIndex == 0 ? PostScreen() : Profile(),
+      body: currentIndex == 0 ? PostScreen() : Profile(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(MaterialPageRoute(
@@ -89,8 +88,8 @@ class _HomeState extends State<Home> {
         shape: CircularNotchedRectangle(),
         child: BottomNavigationBar(
           items: [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
-            BottomNavigationBarItem(icon: Icon(Icons.person), label: '')
+            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+            BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile')
           ],
           currentIndex: currentIndex,
           onTap: (val) {
@@ -98,6 +97,9 @@ class _HomeState extends State<Home> {
               currentIndex = val;
             });
           },
+          //          backgroundColor: Colors.blue, // สีพื้นหลัง
+          // selectedItemColor: Colors.white, // สีของไอคอนที่เลือก
+          // unselectedItemColor: Colors.grey, // สีของไอคอนที่ไม่ได้เลือก
         ),
       ),
     );
