@@ -45,6 +45,8 @@ dependencies:
   quickalert: ^1.0.2
   flutter_picker: ^2.1.0
   searchable_listview: ^2.7.1
+  file_picker: ^6.0.0
+  multiple_images_picker: ^1.0.1
   
   
 

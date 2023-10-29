@@ -5,33 +5,33 @@ import 'package:test_blog_app_project/serveices/user_service.dart';
 import '../constant.dart';
 import '../models/post.dart';
 
-Future<ApiResponse> getCategories() async {
-  ApiResponse apiResponse = ApiResponse();
-  try {
-    String token = await getToken();
-    final response = await http.get(
-      Uri.parse('$postsURL'), // แทน categoriesURL ด้วย URL ที่ใช้เรียกหมวดหมู่
-      headers: {'Accept': 'application/json', 'Authorization': 'Bearer $token'},
-    );
+// Future<ApiResponse> getCategories() async {
+//   ApiResponse apiResponse = ApiResponse();
+//   try {
+//     String token = await getToken();
+//     final response = await http.get(
+//       Uri.parse('$postsURL'), 
+//       headers: {'Accept': 'application/json', 'Authorization': 'Bearer $token'},
+//     );
 
-    switch (response.statusCode) {
-      case 200:
-        apiResponse.data = jsonDecode(response.body)['categories']
-            .map((c) => c['name'].toString())
-            .toList();
-        break;
-      case 401:
-        apiResponse.error = unauthorized;
-        break;
-      default:
-        apiResponse.error = somethingWentWrong;
-        break;
-    }
-  } catch (e) {
-    apiResponse.error = serverError;
-  }
-  return apiResponse;
-}
+//     switch (response.statusCode) {
+//       case 200:
+//         apiResponse.data = jsonDecode(response.body)['categories']
+//             .map((c) => c['name'].toString())
+//             .toList();
+//         break;
+//       case 401:
+//         apiResponse.error = unauthorized;
+//         break;
+//       default:
+//         apiResponse.error = somethingWentWrong;
+//         break;
+//     }
+//   } catch (e) {
+//     apiResponse.error = serverError;
+//   }
+//   return apiResponse;
+// }
 
 // Get posts by category
 Future<ApiResponse> getPostsByCategory(String category) async {

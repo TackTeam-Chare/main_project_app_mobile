@@ -247,6 +247,28 @@ class _PostFormState extends State<PostForm> {
                           ),
                         ),
                       ),
+                      Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Row(
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {
+                                // _getImageFromGallery();
+                              },
+                              child: Text('เลือกรูปภาพ'),
+                            ),
+                            if (_imageFile != null)
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Image.file(
+                                  _imageFile!,
+                                  width: 100,
+                                  height: 100,
+                                ),
+                              ),
+                          ],
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -282,5 +304,3 @@ class _PostFormState extends State<PostForm> {
     );
   }
 }
-
-class _imageFile {}

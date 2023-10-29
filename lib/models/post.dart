@@ -10,7 +10,7 @@ class Post {
   int? commentsCount;
   User? user;
   bool? selfLiked;
-   List<String> categories;
+  List<String> categories;
 
   Post({
     this.id,
@@ -38,6 +38,7 @@ class Post {
         user: User(
             id: json['user']['id'],
             name: json['user']['name'],
-            image: json['user']['image']), categories: []);
+            image: json['user']['image']),
+        categories: []);
   }
 }

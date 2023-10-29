@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:test_blog_app_project/constant.dart';
 import 'package:test_blog_app_project/models/api_response.dart';
@@ -22,7 +21,18 @@ class _PostScreenState extends State<PostScreen> {
   int userId = 0;
   bool _loading = true;
   bool _noSearchResults = false;
+  String? selectedCategory;
+  List<String> selectedCategories = [];
 
+  List<String> categories = [
+    "ศาสนา",
+    "การศึกษา",
+    "การท่องเที่ยว",
+    "กีฬา",
+    "เกมส์",
+    "การเมือง",
+    "โซเชียล"
+  ];
   TextEditingController _searchController = TextEditingController();
   FocusNode _searchFocus = FocusNode();
 
@@ -45,6 +55,10 @@ class _PostScreenState extends State<PostScreen> {
 
     if (_searchController.text.isNotEmpty) {
       response = await getPostsByCategory(_searchController.text);
+    } else if (selectedCategories.isNotEmpty) {
+      // If selectedCategories is not empty, filter by category
+      String category = selectedCategories.join(',');
+      response = await getPostsByCategory(category);
     } else {
       response = await getPosts();
     }
@@ -64,6 +78,23 @@ class _PostScreenState extends State<PostScreen> {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('${response.error}'),
       ));
+    }
+  }
+
+  void filterPostsByCategory(String category) {
+    if (category.isEmpty) {
+      setState(() {
+        _filteredPostList = List.from(_postList);
+        _noSearchResults = false;
+      });
+    } else {
+      setState(() {
+        _filteredPostList = _postList
+            .where(
+                (post) => post.category.toLowerCase() == category.toLowerCase())
+            .toList();
+        _noSearchResults = _filteredPostList.isEmpty;
+      });
     }
   }
 
@@ -185,6 +216,40 @@ class _PostScreenState extends State<PostScreen> {
                       filterPosts(value);
                     },
                   ),
+                ),
+                Wrap(
+                  children: [
+                    Center(
+                      child: Text(
+                        'หมวดหมู่',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    ...categories.map((category) {
+                      bool isSelected = selectedCategories.contains(category);
+                      return Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: InputChip(
+                          label: Text(category),
+                          selected: isSelected,
+                          onSelected: (selected) {
+                            setState(() {
+                              if (selected) {
+                                selectedCategories.add(category);
+                              } else {
+                                selectedCategories.remove(category);
+                              }
+                              // Filter posts by selected categories
+                              filterPostsByCategory(category);
+                            });
+                          },
+                        ),
+                      );
+                    }).toList(),
+                  ],
                 ),
                 Expanded(
                   child: _noSearchResults
