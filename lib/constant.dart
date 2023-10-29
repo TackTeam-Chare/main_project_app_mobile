@@ -9,6 +9,7 @@ const userURL = 'http://192.168.1.150:8000/api/user';
 const postsURL = 'http://192.168.1.150:8000/api/posts';
 const commentsURL = 'http://192.168.1.150:8000/api/comments';
 const changePasswordURL = 'http://192.168.1.150:8000/api/changePassword';
+const changeEmailURL = 'http://192.168.1.150:8000/api/changeEmail';
 
 // ----- Errors -----
 const serverError = 'Server error';

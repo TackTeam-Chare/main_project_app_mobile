@@ -126,5 +126,49 @@ public function changePassword(Request $request) {
         return response(['message' => 'ไม่มีผู้ใช้ล็อกอิน'], Response::HTTP_UNAUTHORIZED);
     }
 }
+// public function changeEmail(Request $request)
+// {
+//     if (Auth::check()) {
+//         $user = Auth::user();
+//         $newEmail = $request->input('email');
+
+//         // ตรวจสอบว่าอีเมล์ใหม่ไม่ซ้ำกับอีเมล์ของผู้ใช้คนอื่น
+//         if (User::where('email', $newEmail)->where('id', '!=', $user->id)->exists()) {
+//             return response(['message' => 'อีเมล์นี้ถูกใช้แล้ว'], Response::HTTP_CONFLICT);
+//         }
+        
+//         $user->email = $newEmail;
+//         $user->save();
+
+//         return response(['message' => 'อีเมล์ถูกเปลี่ยนแล้ว'], Response::HTTP_OK);
+//     } else {
+//         return response(['message' => 'ไม่มีผู้ใช้ล็อกอิน'], Response::HTTP_UNAUTHORIZED);
+//     }
+    
+// }
+public function changeEmail(Request $request)
+{
+    $user = auth()->user();
+
+    $attrs = $request->validate([
+       
+        'email' => 'email|unique:users,email,' . $user->id,
+      
+    ]);
+
+   
+    $user->update($attrs);
+
+    $message = 'Updated successfully.';
+
+    if (!$user->wasChanged()) {
+        $message = 'No changes were made.';
+    }
+
+    return response([
+        'user' => $user,
+        'message' => $message,
+    ], 200);
+}
 
 }

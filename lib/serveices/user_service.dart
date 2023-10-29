@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:test_blog_app_project/constant.dart';
@@ -201,6 +200,37 @@ Future<ApiResponse> changePassword(
     switch (response.statusCode) {
       case 200:
         apiResponse.data = jsonDecode(response.body)['message'];
+        break;
+      case 401:
+        apiResponse.error = unauthorized;
+        break;
+      default:
+        apiResponse.error = somethingWentWrong;
+        break;
+    }
+  } catch (e) {
+    apiResponse.error = serverError;
+  }
+  return apiResponse;
+}
+
+Future<ApiResponse> changeEmail(String newEmail) async {
+  ApiResponse apiResponse = ApiResponse();
+  try {
+    String token = await getToken();
+    final response = await http.put(Uri.parse(changeEmailURL), headers: {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    }, body: {
+      'email': newEmail,
+    });
+
+    switch (response.statusCode) {
+      case 200:
+        apiResponse.data = jsonDecode(response.body)['message'];
+        break;
+      case 409: // HTTP_CONFLICT
+        apiResponse.error = 'อีเมล์นี้ถูกใช้แล้ว';
         break;
       case 401:
         apiResponse.error = unauthorized;

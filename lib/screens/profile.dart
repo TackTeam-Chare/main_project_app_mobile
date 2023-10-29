@@ -19,6 +19,9 @@ class _ProfileState extends State<Profile> {
   bool loading = true;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   File? _imageFile;
+
+  String newEmail = '';
+
   final _picker = ImagePicker();
   TextEditingController txtNameController = TextEditingController();
   TextEditingController txtEmailController = TextEditingController();
@@ -206,6 +209,80 @@ class _ProfileState extends State<Profile> {
     }
   }
 
+  void _showChangeEmailDialog() async {
+    String newEmail = ''; // ต้องกำหนดค่าเริ่มต้นให้กับ newEmail
+
+    bool confirmChangeEmail = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('เปลี่ยนอีเมล์'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  decoration: kInputDecoration('อีเมล์ใหม่'),
+                  controller: txtEmailController,
+                  validator: (val) => val!.isEmpty ? 'Invalid Email' : null,
+                  onChanged: (value) {
+                    newEmail = value;
+                  },
+                ),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('ยกเลิก'),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            TextButton(
+              child: Text('เปลี่ยน'),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmChangeEmail == true) {
+      _changeEmail(newEmail);
+    }
+  }
+
+  void _changeEmail(String newEmail) async {
+    if (newEmail != null) {
+      setState(() {
+        loading = true;
+      });
+      ApiResponse response = await changeEmail(newEmail);
+
+      if (response.error == null) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('${response.data}')));
+      } else if (response.error == unauthorized) {
+        logout().then((value) => {
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => Login()),
+                  (route) => false)
+            });
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('${response.error}')));
+      }
+
+      setState(() {
+        loading = false;
+      });
+    }
+  }
+
   @override
   void initState() {
     getUser();
@@ -292,6 +369,21 @@ class _ProfileState extends State<Profile> {
                   ),
                   style: ElevatedButton.styleFrom(
                     primary: Colors.blue,
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    _showChangeEmailDialog();
+                  },
+                  child: Text(
+                    'เปลี่ยนอีเมล์',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.green, // เปลี่ยนสีปุ่มเป็นสีเขียว
                   ),
                 ),
                 SizedBox(
