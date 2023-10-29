@@ -296,10 +296,10 @@ class _ProfileState extends State<Profile> {
   Widget build(BuildContext context) {
     return loading
         ? Center(
-            child: CircularProgressIndicator(),
-          )
+            // child: CircularProgressIndicator(),
+            )
         : Padding(
-            padding: EdgeInsets.only(top: 40, left: 40, right: 40),
+            padding: EdgeInsets.only(top: 5, left: 40, right: 40),
             child: ListView(
               children: [
                 Center(
@@ -308,22 +308,15 @@ class _ProfileState extends State<Profile> {
                       width: 110,
                       height: 110,
                       decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(60),
-                        image: _imageFile == null
-                            ? user!.image != null
-                                ? DecorationImage(
-                                    image: NetworkImage('${user!.image}'),
-                                    fit: BoxFit.cover)
-                                : null
-                            : DecorationImage(
-                                image: FileImage(_imageFile ?? File('')),
-                                fit: BoxFit.cover),
-                        color: Colors.amber,
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: Image.network(
+                        'https://cdn-icons-png.flaticon.com/512/3048/3048173.png', // URL ของรูปภาพจากอินเทอร์เน็ต
+                        width: 110,
+                        height: 110,
+                        fit: BoxFit.cover,
                       ),
                     ),
-                    onTap: () {
-                      getImage();
-                    },
                   ),
                 ),
                 SizedBox(
