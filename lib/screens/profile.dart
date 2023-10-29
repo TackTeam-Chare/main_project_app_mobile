@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:test_blog_app_project/models/api_response.dart';
 import 'package:test_blog_app_project/models/user.dart';
 import 'package:test_blog_app_project/serveices/user_service.dart';
@@ -116,6 +117,13 @@ class _ProfileState extends State<Profile> {
     ApiResponse response = await deleteAccount();
     if (response.error == null) {
       // ลบบัญชีผู้ใช้สำเร็จ และเปลี่ยนไปหน้าล็อกอิน
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        QuickAlert.show(
+          context: context,
+          type: QuickAlertType.success,
+          title: 'Account deleted successfully',
+        );
+      });
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => Login()),
         (route) => false,
