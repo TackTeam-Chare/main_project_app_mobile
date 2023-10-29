@@ -184,8 +184,37 @@ Future<bool> logout() async {
 //   return base64Encode(file.readAsBytesSync());
 // }
 // Change user password
-Future<ApiResponse> changePassword(
-    String currentPassword, String newPassword) async {
+// Future<ApiResponse> changePassword(
+//     String currentPassword, String newPassword) async {
+//   ApiResponse apiResponse = ApiResponse();
+//   try {
+//     String token = await getToken();
+//     final response = await http.put(Uri.parse(changePasswordURL), headers: {
+//       'Accept': 'application/json',
+//       'Authorization': 'Bearer $token',
+//     }, body: {
+//       'password': currentPassword,
+//       'new_password': newPassword,
+//     });
+
+//     switch (response.statusCode) {
+//       case 200:
+//         apiResponse.data = jsonDecode(response.body)['message'];
+//         break;
+//       case 401:
+//         apiResponse.error = unauthorized;
+//         break;
+//       default:
+//         apiResponse.error = somethingWentWrong;
+//         break;
+//     }
+//   } catch (e) {
+//     apiResponse.error = serverError;
+//   }
+//   return apiResponse;
+// }
+
+Future<ApiResponse> changePassword(String newPassword) async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
@@ -193,13 +222,15 @@ Future<ApiResponse> changePassword(
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
     }, body: {
-      'current_password': currentPassword,
-      'new_password': newPassword,
+      'password': newPassword,
     });
 
     switch (response.statusCode) {
       case 200:
         apiResponse.data = jsonDecode(response.body)['message'];
+        break;
+      case 409: // HTTP_CONFLICT
+        apiResponse.error = 'อีเมล์นี้ถูกใช้แล้ว';
         break;
       case 401:
         apiResponse.error = unauthorized;

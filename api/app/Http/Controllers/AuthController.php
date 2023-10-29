@@ -8,16 +8,22 @@ use App\Models\User;
 
 class AuthController extends Controller
 {
-    public function deleteUser()
+//     public function deleteUser()
+// {
+//     $user = auth()->user();
+//     $user->delete();
+
+//     auth()->logout(); // ล็อกเอาท์ผู้ใช้หลังจากลบบัญชี
+
+//     return response(['message' => 'User deleted successfully.'], 200);
+// }
+public function deleteUser(Request $request)
 {
-    $user = auth()->user();
+    $user = User::find(Auth::user()->id);
+    // $category->title = $request->title;
     $user->delete();
-
-    auth()->logout(); // ล็อกเอาท์ผู้ใช้หลังจากลบบัญชี
-
-    return response(['message' => 'User deleted successfully.'], 200);
+    return response(['message' => 'delete Success']);
 }
-
     //Register user
     public function register(Request $request)
     {
@@ -111,21 +117,59 @@ public function update(Request $request)
         'message' => $message,
     ], 200);
 }
+// public function changePassword(Request $request)
+// {
+//     $user = auth()->user();
 
-public function changePassword(Request $request) {
-    if (Auth::check()) {
-        $user = Auth::user();
-        if (Hash::check($request->input('current_password'), $user->password)) {
-            $user->password = Hash::make($request->input('new_password'));
-            $user->save();
-            return response(['message' => 'รหัสผ่านถูกเปลี่ยนแล้ว'], Response::HTTP_OK);
-        } else {
-            return response(['message' => 'รหัสผ่านปัจจุบันไม่ถูกต้อง'], Response::HTTP_UNAUTHORIZED);
+//     $attrs = $request->validate([
+ 
+//         // 'password' => 'string|min:6'
+//         'password' => 'string|min:6' 
+//     ]);
+
+//     if (isset($attrs['password'])) {
+//         $attrs['password'] = bcrypt($attrs['password']);
+//     }
+
+//     $user->update($attrs);
+
+//     $message = 'Updated successfully.';
+
+//     if (!$user->wasChanged()) {
+//         $message = 'No changes were made.';
+//     }
+
+//     return response([
+//         'user' => $user,
+//         'message' => $message,
+//     ], 200);
+// }
+public function changePassword(Request $request)
+    {
+        #Match The Old Password
+        if (!Hash::check($request->old_passwcord, Auth::user()->password)) {
+            return response(['message' => 'Old Password Doesnt match!'],400);
         }
-    } else {
-        return response(['message' => 'ไม่มีผู้ใช้ล็อกอิน'], Response::HTTP_UNAUTHORIZED);
+        #Update the new Password
+        User::whereId(Auth::user()->id)->update([
+            'password' => Hash::make($request->new_password),
+        ]);
+        return response(['message' => 'Password changed successfully!']);
     }
-}
+// public function changePassword(Request $request) {
+//     if (Auth::check()) {
+//         $user = Auth::user();
+//         if (Hash::check($request->input('current_password'), $user->password)) {
+//             $user->password = Hash::make($request->input('new_password'));
+//             $user->save();
+//             return response(['message' => 'รหัสผ่านถูกเปลี่ยนแล้ว'], Response::HTTP_OK);
+//         } else {
+//             return response(['message' => 'รหัสผ่านปัจจุบันไม่ถูกต้อง'], Response::HTTP_UNAUTHORIZED);
+//         }
+//     } else {
+//         return response(['message' => 'ไม่มีผู้ใช้ล็อกอิน'], Response::HTTP_UNAUTHORIZED);
+//     }
+// }
 // public function changeEmail(Request $request)
 // {
 //     if (Auth::check()) {

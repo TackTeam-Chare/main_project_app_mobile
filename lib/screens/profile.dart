@@ -21,6 +21,7 @@ class _ProfileState extends State<Profile> {
   File? _imageFile;
 
   String newEmail = '';
+  String newPassword = '';
 
   final _picker = ImagePicker();
   TextEditingController txtNameController = TextEditingController();
@@ -56,90 +57,6 @@ class _ProfileState extends State<Profile> {
     } else {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text('${response.error}')));
-    }
-  }
-
-  void _showChangePasswordDialog() async {
-    String? currentPassword;
-    String? newPassword;
-
-    bool confirmChangePassword = await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Change Password'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  decoration: kInputDecoration('Current Password'),
-                  onChanged: (value) {
-                    currentPassword = value;
-                  },
-                  obscureText: true,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: TextFormField(
-                  decoration: kInputDecoration('New Password'),
-                  onChanged: (value) {
-                    newPassword = value;
-                  },
-                  obscureText: true,
-                ),
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-            ),
-            TextButton(
-              child: Text('Change'),
-              onPressed: () {
-                Navigator.of(context).pop(true);
-              },
-            ),
-          ],
-        );
-      },
-    );
-
-    if (confirmChangePassword == true) {
-      _changePassword(currentPassword, newPassword);
-    }
-  }
-
-  void _changePassword(String? currentPassword, String? newPassword) async {
-    if (currentPassword != null && newPassword != null) {
-      setState(() {
-        loading = true;
-      });
-      ApiResponse response = await changePassword(currentPassword, newPassword);
-
-      if (response.error == null) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('${response.data}')));
-      } else if (response.error == unauthorized) {
-        logout().then((value) => {
-              Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => Login()),
-                  (route) => false)
-            });
-      } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('${response.error}')));
-      }
-
-      setState(() {
-        loading = false;
-      });
     }
   }
 
@@ -262,6 +179,80 @@ class _ProfileState extends State<Profile> {
         loading = true;
       });
       ApiResponse response = await changeEmail(newEmail);
+
+      if (response.error == null) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('${response.data}')));
+      } else if (response.error == unauthorized) {
+        logout().then((value) => {
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => Login()),
+                  (route) => false)
+            });
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text('${response.error}')));
+      }
+
+      setState(() {
+        loading = false;
+      });
+    }
+  }
+
+  void _showChangePasswordDialog() async {
+    String newPassword = ''; // ต้องกำหนดค่าเริ่มต้นให้กับ newEmail
+
+    bool confirmChangPassword = await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('เปลี่ยนรหัสผ่าน'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  decoration: kInputDecoration('รหัสผ่าน'),
+                  controller: txtPasswordController,
+                  validator: (val) => val!.isEmpty ? 'Invalid Email' : null,
+                  onChanged: (value) {
+                    newPassword = value;
+                  },
+                ),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text('ยกเลิก'),
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+            ),
+            TextButton(
+              child: Text('เปลี่ยน'),
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmChangPassword == true) {
+      _changePassword(newPassword);
+    }
+  }
+
+  void _changePassword(String newPassword) async {
+    if (newPassword != null) {
+      setState(() {
+        loading = true;
+      });
+      ApiResponse response = await changePassword(newPassword);
 
       if (response.error == null) {
         ScaffoldMessenger.of(context)
