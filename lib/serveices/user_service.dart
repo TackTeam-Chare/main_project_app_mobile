@@ -126,7 +126,7 @@ Future<ApiResponse> deleteAccount() async {
 }
 
 // Update user
-Future<ApiResponse> updateUser(String name, String email, String? image) async {
+Future<ApiResponse> updateUser(String name, String email,String password ,String? image) async {
   ApiResponse apiResponse = ApiResponse();
   try {
     String token = await getToken();
@@ -139,7 +139,7 @@ Future<ApiResponse> updateUser(String name, String email, String? image) async {
             ? {
                 'name': name,
               }
-            : {'name': name, 'email': email, 'image': image});
+            : {'name': name, 'email': email, 'image': image,'password':password});
     // user can update his/her name or name and image
 
     switch (response.statusCode) {

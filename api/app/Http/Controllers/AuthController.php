@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-
+use Illuminate\Support\Facades\Hash;
 class AuthController extends Controller
 {
 //     public function deleteUser()
@@ -117,79 +117,40 @@ public function update(Request $request)
         'message' => $message,
     ], 200);
 }
-// public function changePassword(Request $request)
-// {
-//     $user = auth()->user();
-
-//     $attrs = $request->validate([
- 
-//         // 'password' => 'string|min:6'
-//         'password' => 'string|min:6' 
-//     ]);
-
-//     if (isset($attrs['password'])) {
-//         $attrs['password'] = bcrypt($attrs['password']);
-//     }
-
-//     $user->update($attrs);
-
-//     $message = 'Updated successfully.';
-
-//     if (!$user->wasChanged()) {
-//         $message = 'No changes were made.';
-//     }
-
-//     return response([
-//         'user' => $user,
-//         'message' => $message,
-//     ], 200);
-// }
 public function changePassword(Request $request)
-    {
-        #Match The Old Password
-        if (!Hash::check($request->old_passwcord, Auth::user()->password)) {
-            return response(['message' => 'Old Password Doesnt match!'],400);
-        }
-        #Update the new Password
-        User::whereId(Auth::user()->id)->update([
-            'password' => Hash::make($request->new_password),
-        ]);
-        return response(['message' => 'Password changed successfully!']);
+{
+    $user = auth()->user();
+
+    $attrs = $request->validate([
+        'password' => 'string|min:6'
+    ]);
+
+    // ตรวจสอบว่ารหัสผ่านใหม่ไม่เหมือนรหัสผ่านเดิม
+    if (isset($attrs['password']) && Hash::check($attrs['password'], $user->password)) {
+        return response(['message' => 'New password must be different from the old password.'], 400);
     }
-// public function changePassword(Request $request) {
-//     if (Auth::check()) {
-//         $user = Auth::user();
-//         if (Hash::check($request->input('current_password'), $user->password)) {
-//             $user->password = Hash::make($request->input('new_password'));
-//             $user->save();
-//             return response(['message' => 'รหัสผ่านถูกเปลี่ยนแล้ว'], Response::HTTP_OK);
-//         } else {
-//             return response(['message' => 'รหัสผ่านปัจจุบันไม่ถูกต้อง'], Response::HTTP_UNAUTHORIZED);
-//         }
-//     } else {
-//         return response(['message' => 'ไม่มีผู้ใช้ล็อกอิน'], Response::HTTP_UNAUTHORIZED);
-//     }
-// }
-// public function changeEmail(Request $request)
-// {
-//     if (Auth::check()) {
-//         $user = Auth::user();
-//         $newEmail = $request->input('email');
 
-//         // ตรวจสอบว่าอีเมล์ใหม่ไม่ซ้ำกับอีเมล์ของผู้ใช้คนอื่น
-//         if (User::where('email', $newEmail)->where('id', '!=', $user->id)->exists()) {
-//             return response(['message' => 'อีเมล์นี้ถูกใช้แล้ว'], Response::HTTP_CONFLICT);
-//         }
-        
-//         $user->email = $newEmail;
-//         $user->save();
+    // ถ้ารหัสผ่านใหม่ไม่เหมือนรหัสผ่านเดิมหรือไม่มีการอัปเดตรหัสผ่านเลย
+    if (isset($attrs['password'])) {
+        $attrs['password'] = bcrypt($attrs['password']);
+    }
 
-//         return response(['message' => 'อีเมล์ถูกเปลี่ยนแล้ว'], Response::HTTP_OK);
-//     } else {
-//         return response(['message' => 'ไม่มีผู้ใช้ล็อกอิน'], Response::HTTP_UNAUTHORIZED);
-//     }
-    
-// }
+    $user->update($attrs);
+
+    $message = 'Updated successfully.';
+
+    if (!$user->wasChanged()) {
+        $message = 'No changes were made.';
+    }
+
+    return response([
+        'user' => $user,
+        'message' => $message,
+    ], 200);
+}
+
+
+
 public function changeEmail(Request $request)
 {
     $user = auth()->user();
@@ -214,5 +175,6 @@ public function changeEmail(Request $request)
         'message' => $message,
     ], 200);
 }
+
 
 }
