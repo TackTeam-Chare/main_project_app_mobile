@@ -19,24 +19,23 @@ class _ProfileState extends State<Profile> {
   User? user;
   bool loading = true;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  File? _imageFile;
 
   String newEmail = '';
   String newPassword = '';
 
-  final _picker = ImagePicker();
+  // final _picker = ImagePicker();
   TextEditingController txtNameController = TextEditingController();
   TextEditingController txtEmailController = TextEditingController();
   TextEditingController txtPasswordController = TextEditingController();
 
-  Future getImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _imageFile = File(pickedFile.path);
-      });
-    }
-  }
+  // Future getImage() async {
+  //   final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+  //   if (pickedFile != null) {
+  //     setState(() {
+  //       _imageFile = File(pickedFile.path);
+  //     });
+  //   }
+  // }
 
   // get user detail
   void getUser() async {
