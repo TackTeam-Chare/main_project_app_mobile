@@ -189,11 +189,20 @@ class _ProfileState extends State<Profile> {
       setState(() {
         loading = true;
       });
+
       ApiResponse response = await changeEmail(newEmail);
 
       if (response.error == null) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text('${response.data}')));
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          QuickAlert.show(
+            // แสดง QuickAlert ทันทีเมื่อล็อคอินสำเร็จ
+            context: context,
+            type: QuickAlertType.success,
+            title: 'Data Editing Completed.',
+          );
+        });
       } else if (response.error == unauthorized) {
         logout().then((value) => {
               Navigator.of(context).pushAndRemoveUntil(
@@ -203,6 +212,15 @@ class _ProfileState extends State<Profile> {
       } else {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text('${response.error}')));
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          QuickAlert.show(
+            // แสดง QuickAlert ทันทีเมื่อล็อคอินสำเร็จ
+            context: context,
+            type: QuickAlertType.error,
+            title: 'Failed to edit data!',
+            text: 'Please try editing again.',
+          );
+        });
       }
 
       setState(() {

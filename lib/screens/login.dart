@@ -25,11 +25,12 @@ class _LoginState extends State<Login> {
     if (response.error == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         QuickAlert.show(
-            // แสดง QuickAlert ทันทีเมื่อล็อคอินสำเร็จ
-            context: context,
-            type: QuickAlertType.success,
-            title: 'Login successful',
-            text: 'Welcome users',);
+          // แสดง QuickAlert ทันทีเมื่อล็อคอินสำเร็จ
+          context: context,
+          type: QuickAlertType.success,
+          title: 'Sign In Successful',
+          text: 'Welcome, Customers.',
+        );
       });
       _saveAndRedirectToHome(response.data as User);
     } else {
@@ -43,8 +44,8 @@ class _LoginState extends State<Login> {
           // แสดง QuickAlert ทันทีเมื่อล็อคอินสำเร็จ
           context: context,
           type: QuickAlertType.error,
-          title: 'Login failed',
-          text: 'Please log in again.',
+          title: 'Sign In failed',
+          text: 'Please Sign In again.',
         );
       });
     }

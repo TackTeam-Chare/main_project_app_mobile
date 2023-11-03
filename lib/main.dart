@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'screens/loading.dart';
 
 void main() {
-  runApp(App());
+runApp(App());
 }
 
 class App extends StatelessWidget {

@@ -31,8 +31,8 @@ class _RegisterState extends State<Register> {
           // แสดง QuickAlert ทันทีเมื่อล็อคอินสำเร็จ
           context: context,
           type: QuickAlertType.success,
-          title: 'Login successful',
-          text: 'Welcome users',
+          title: 'Sign Up successful',
+          text: 'Welcome, Customers.',
         );
       });
       _saveAndRedirectToHome(response.data as User);
@@ -49,8 +49,8 @@ class _RegisterState extends State<Register> {
           // แสดง QuickAlert ทันทีเมื่อล็อคอินสำเร็จ
           context: context,
           type: QuickAlertType.error,
-          title: 'Login failed',
-          text: 'Please log in again.',
+          title: 'Sign Up Failed!',
+          text: 'Please Sign Up again.',
         );
       });
     }
